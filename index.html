@@ -11,38 +11,25 @@
         @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500&display=swap');
         body { background-color: #000; color: #00ff41; font-family: 'Fira Code', monospace; margin: 0; padding: 10px; overflow-x: hidden; }
         .container { max-width: 800px; margin: auto; border: 1px solid #00ff41; padding: 10px; box-shadow: 0 0 20px #00ff4133; min-height: 95vh; display: flex; flex-direction: column; }
-        
-        /* HEADER SECTION */
         .header { text-align: center; border-bottom: 2px solid #00ff41; padding-bottom: 10px; margin-bottom: 10px; }
         h1 { font-size: 1.1em; letter-spacing: 2px; margin: 5px 0; text-shadow: 0 0 5px #00ff41; }
-        
-        /* NAVIGATION TABS */
         .nav-tabs { display: flex; justify-content: space-between; border-bottom: 1px solid #00441b; padding-bottom: 5px; margin-bottom: 15px; }
         .tab { color: #00882d; text-decoration: none; font-size: 0.65em; font-weight: bold; padding: 5px; text-transform: uppercase; border: 1px solid transparent; }
         .tab.active { color: #00ff41; border: 1px solid #00ff41; background: #00ff4111; }
-
-        /* MODULE CONTENT */
         .module { display: none; flex-grow: 1; }
         .module.active { display: block; }
-
-        /* CARDS & LISTS */
         .card { border: 1px solid #00441b; padding: 10px; margin-bottom: 8px; background: #050505; font-size: 0.75em; }
         .card-header { display: flex; justify-content: space-between; border-bottom: 1px dashed #00441b; padding-bottom: 5px; margin-bottom: 5px; font-weight: bold; }
         .tag { background: #00ff41; color: #000; padding: 1px 4px; font-size: 0.85em; margin-right: 5px; }
-
-        /* FORMS & INPUTS */
         .input-group { border: 1px solid #00ff41; padding: 10px; background: #001a0a; margin-top: 15px; }
         .label { font-size: 0.6em; color: #00882d; text-transform: uppercase; margin-bottom: 5px; display: block; }
         input, select, textarea { width: 100%; padding: 8px; background: #000; border: 1px solid #00441b; color: #00ff41; font-family: 'Fira Code', monospace; font-size: 0.8em; margin-bottom: 10px; box-sizing: border-box; }
         .btn { display: block; width: 100%; padding: 12px; background: #00ff41; color: #000; text-align: center; font-weight: bold; border: none; cursor: pointer; text-transform: uppercase; font-size: 0.8em; }
         .btn:active { background: #00882d; }
-
-        /* SPECIAL ELEMENTS */
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .stat-box { border: 1px solid #00ff41; padding: 8px; text-align: center; }
         .stat-val { font-size: 1.2em; font-weight: bold; display: block; }
         .stat-lbl { font-size: 0.5em; color: #00882d; text-transform: uppercase; }
-
         .footer { text-align: center; font-size: 0.5em; margin-top: auto; padding-top: 20px; color: #00441b; }
         .blink { animation: blinker 1s linear infinite; }
         @keyframes blinker { 50% { opacity: 0; } }
@@ -52,7 +39,7 @@
     <div class='container'>
         <div class='header'>
             <h1>[ TSA_ULTIMATE_TERMINAL ]</h1>
-            <div style='font-size: 0.5em;'><span class='blink'>></span> PORTABLE_DASHBOARD_ACTIVE</div>
+            <div style='font-size: 0.5em;'><span class='blink'>></span> SILENT_SYNC_V4.2_ACTIVE</div>
         </div>
 
         <div class='nav-tabs'>
@@ -62,135 +49,118 @@
             <a href='#' class='tab' onclick='showModule("bmd", this)'>[BMD]</a>
         </div>
 
-        <!-- MODULE: DASHBOARD -->
         <div id='mod-dashboard' class='module active'>
             <div class='stat-grid'>
-                <div class='stat-box'>
-                    <span id='stat-completed' class='stat-val'>0</span>
-                    <span class='stat-lbl'>Misi Tuntas</span>
-                </div>
-                <div class='stat-box'>
-                    <span id='stat-tpp' class='stat-val'>0%</span>
-                    <span class='stat-lbl'>Status TPP</span>
-                </div>
+                <div class='stat-box'><span id='stat-completed' class='stat-val'>0</span><span class='stat-lbl'>Misi Tuntas</span></div>
+                <div class='stat-box'><span id='stat-tpp' class='stat-val'>0%</span><span class='stat-lbl'>Status TPP</span></div>
             </div>
-            <div class='card'>
-                <span class='label'>Last Sync Info</span>
-                <div id='last-sync-full' style='font-size: 0.9em;'>Mencari Sinyal SQL...</div>
-            </div>
-            <div class='input-group'>
-                <span class='label'>Quick Command</span>
-                <button class='btn' onclick='window.open("tg://msg?text=/dic_check")'>CEK_LOG_HARIAN</button>
-            </div>
+            <div class='card'><span class='label'>Last Sync Info</span><div id='last-sync-full'>Mencari Sinyal SQL...</div></div>
         </div>
 
-        <!-- MODULE: TASK -->
         <div id='mod-task' class='module'>
             <div id='task-list'></div>
             <div class='input-group'>
-                <span class='label'>Add New Mission</span>
+                <span class='label'>Direct Task Input</span>
                 <input type='text' id='in-task-uraian' placeholder='Uraian...'>
-                <select id='in-task-prio'>
-                    <option value='P1'>P1 (URGENT)</option>
-                    <option value='P2'>P2 (NORMAL)</option>
-                    <option value='Khusus'>KHUSUS</option>
-                </select>
-                <button class='btn' onclick='executeCmd("/Task")'>TAMBAH_MISI</button>
+                <select id='in-task-prio'><option value='P1'>P1 (URGENT)</option><option value='P2'>P2 (NORMAL)</option><option value='Khusus'>KHUSUS</option></select>
+                <button class='btn' onclick='sendToGate("task")'>KIRIM_KE_SQL</button>
             </div>
         </div>
 
-        <!-- MODULE: GUARDIAN -->
         <div id='mod-guardian' class='module'>
-            <div class='stat-box' style='margin-bottom: 10px;'>
-                <span id='guard-total' class='stat-val'>Rp 0</span>
-                <span class='stat-lbl'>Estimasi TPP (40%)</span>
-            </div>
+            <div class='stat-box' style='margin-bottom: 10px;'><span id='guard-total' class='stat-val'>Rp 0</span><span class='stat-lbl'>Estimasi TPP</span></div>
             <div id='absen-logs'></div>
             <div class='input-group'>
-                <span class='label'>Input Dosa Absensi</span>
-                <select id='in-absen-kat'>
-                    <option value='TL'>TL (Terlambat)</option>
-                    <option value='PC'>PC (Pulang Cepat)</option>
-                    <option value='CT'>CT (Cuti Tahunan)</option>
-                </select>
+                <span class='label'>Catat Absen</span>
+                <select id='in-absen-kat'><option value='TL'>TL</option><option value='PC'>PC</option></select>
                 <input type='time' id='in-absen-jam' value='07:31'>
-                <button class='btn' onclick='executeCmd("/Absen")'>CATAT_DOSA</button>
+                <button class='btn' onclick='sendToGate("absen")'>KIRIM_KE_SQL</button>
             </div>
         </div>
 
-        <!-- MODULE: BMD -->
-        <div id='mod-bmd' class='module'>
-            <input type='text' placeholder='Cari Nama Barang...' style='margin-bottom: 10px;'>
-            <div id='bmd-list'></div>
-            <button class='btn' style='background: #00441b; color: #00ff41;'>LIHAT SEMUA KIB</button>
-        </div>
+        <div id='mod-bmd' class='module'><div id='bmd-list'></div></div>
 
-        <div class='footer'>
-            &copy; 2026 TSA_SYSTEM_PORTABLE | V.<span id='sys-v'>...</span>
-        </div>
+        <div class='footer'>&copy; 2026 TSA_SYSTEM | V.<span id='sys-v'>...</span></div>
     </div>
 
     <script>
-        let globalData = {};
+        const GITHUB_TOKEN = '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';
+        const REPO_OWNER = 'dklucky08';
+        const REPO_NAME = 'tommy-superapps';
 
         function showModule(id, el) {
             document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.getElementById('mod-' + id).classList.add('active');
-            el.classList.add('active');
+            if(el) el.classList.add('active');
         }
 
         async function syncData() {
             try {
                 const r = await fetch('status.json?v=' + Date.now());
                 const d = await r.json();
-                globalData = d;
                 
-                // Dashboard
                 document.getElementById('sys-v').innerText = d.version;
                 document.getElementById('last-sync-full').innerText = d.last_sync;
                 document.getElementById('stat-completed').innerText = d.modules.stats.completed;
-                document.getElementById('stat-tpp').innerText = d.modules.guardian.config.total > 0 ? d.modules.guardian.logs[0]?.persen_potongan || 0 + '%' : '100%';
+                document.getElementById('stat-tpp').innerText = d.modules.guardian.logs.length > 0 ? (d.modules.guardian.logs[0].persen_potongan || 0) + '%' : '100%';
 
-                // Task
                 const tList = document.getElementById('task-list');
                 tList.innerHTML = '';
                 d.modules.tasks.forEach(m => {
-                    tList.innerHTML += <div class='card'><div class='card-header'><span><span class='tag'>\</span>\</span></div><div style='color:#ff4444'>[ PENDING ]</div></div>;
+                    tList.innerHTML += '<div class="card"><div class="card-header"><span><span class="tag">' + m.prioritas + '</span>' + m.uraian + '</span></div><div style="color:#ff4444">[ PENDING ]</div></div>';
                 });
 
-                // Guardian
                 document.getElementById('guard-total').innerText = 'Rp ' + d.modules.guardian.config.total.toLocaleString();
                 const aList = document.getElementById('absen-logs');
                 aList.innerHTML = '';
                 d.modules.guardian.logs.forEach(l => {
-                    aList.innerHTML += <div class='card' style='display:flex; justify-content:space-between'><span>\ [\]</span> <span style='color:#ff4444'>-Rp \</span></div>;
+                    aList.innerHTML += '<div class="card" style="display:flex; justify-content:space-between"><span>' + l.tanggal + ' [' + l.kategori + ']</span> <span style="color:#ff4444">-Rp ' + l.rupiah_potongan.toLocaleString() + '</span></div>';
                 });
 
-                // BMD
                 const bList = document.getElementById('bmd-list');
                 bList.innerHTML = '';
                 d.modules.bmd.forEach(a => {
-                    bList.innerHTML += <div class='card'><div>\</div><div style='font-size:0.8em; color:#00882d'>\</div></div>;
+                    bList.innerHTML += '<div class="card"><div>' + a.nama_barang + '</div><div style="font-size:0.8em; color:#00882d">' + a.kode_barang + '</div></div>';
                 });
 
             } catch(e) { console.error('Sync Failed', e); }
         }
 
-        function executeCmd(type) {
-            let msg = '';
-            if(type === '/Task') {
+        async function sendToGate(type) {
+            let payload = {};
+            if(type === 'task') {
                 const u = document.getElementById('in-task-uraian').value;
                 const p = document.getElementById('in-task-prio').value;
                 if(!u) return alert('Uraian Kosong!');
-                msg = /Task \ \;
-                document.getElementById('in-task-uraian').value = '';
-            } else if(type === '/Absen') {
+                payload = { type: 'task', prio: p, uraian: u, ts: new Date().toISOString() };
+            } else {
                 const k = document.getElementById('in-absen-kat').value;
                 const j = document.getElementById('in-absen-jam').value;
-                msg = /Absen \ \;
+                payload = { type: 'absen', kat: k, jam: j, ts: new Date().toISOString() };
             }
-            window.open('tg://msg?text=' + encodeURIComponent(msg));
+
+            try {
+                const fileUrl = 'https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/input_hp.json';
+                let sha = null;
+                const check = await fetch(fileUrl, { headers: { 'Authorization': 'token ' + GITHUB_TOKEN } });
+                if(check.ok) { const meta = await check.json(); sha = meta.sha; }
+
+                const res = await fetch(fileUrl, {
+                    method: 'PUT',
+                    headers: { 'Authorization': 'token ' + GITHUB_TOKEN, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: 'Input from HP: ' + type,
+                        content: btoa(unescape(encodeURIComponent(JSON.stringify(payload)))),
+                        sha: sha
+                    })
+                });
+
+                if(res.ok) {
+                    alert('BERHASIL: Data Terparkir di Awan GitHub!');
+                    if(type === 'task') document.getElementById('in-task-uraian').value = '';
+                } else { alert('GAGAL: Jalur Komando Terhambat.'); }
+            } catch(e) { alert('ERROR: ' + e.message); }
         }
 
         syncData();
