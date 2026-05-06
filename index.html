@@ -2,41 +2,167 @@
 <html lang='id'>
 <head>
     <meta charset='UTF-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>Tommy SuperApps - Mading Digital</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+    <meta name='theme-color' content='#0a0a0a'>
+    <meta name='apple-mobile-web-app-capable' content='yes'>
+    <meta name='apple-mobile-web-app-status-bar-style' content='black-translucent'>
+    <link rel='manifest' href='manifest.json'>
+    <link rel='icon' type='image/png' href='assets/icon-192.png'>
+    <title>TERMINAL - Tommy SuperApps</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a1a; color: #e0e0e0; margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: auto; background: #2d2d2d; padding: 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        h1 { color: #00ffcc; text-align: center; border-bottom: 2px solid #00ffcc; padding-bottom: 10px; }
-        .status-box { background: #3d3d3d; padding: 15px; border-left: 5px solid #00ffcc; margin-bottom: 20px; }
-        .misi-card { background: #333; margin: 10px 0; padding: 10px; border-radius: 5px; border: 1px solid #444; }
-        .misi-card.high { border-left: 5px solid #ff4444; }
-        .footer { text-align: center; font-size: 0.8em; color: #888; margin-top: 20px; }
-        .btn-sync { display: block; width: 100%; padding: 10px; background: #00ffcc; color: #1a1a1a; text-align: center; text-decoration: none; font-weight: bold; border-radius: 5px; margin-top: 10px; }
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500&display=swap');
+
+        body { 
+            background-color: #0a0a0a; 
+            color: #00ff41; 
+            font-family: 'Fira Code', 'Courier New', Courier, monospace; 
+            margin: 0; 
+            padding: 20px;
+            overflow-x: hidden;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .container { 
+            max-width: 900px; 
+            margin: auto; 
+            border: 1px solid #00ff41; 
+            padding: 20px; 
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 1px solid #00ff41;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        h1 { 
+            font-size: 1.2em; 
+            text-transform: uppercase; 
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px #00ff41;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 0.7em;
+            margin-bottom: 20px;
+        }
+
+        .status-item {
+            border: 1px solid #00441b;
+            padding: 10px;
+            background: rgba(0, 255, 65, 0.05);
+        }
+
+        .zona-misi {
+            border: 1px solid #00ff41;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .misi-card {
+            border-bottom: 1px dashed #00441b;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8em;
+        }
+
+        .tag {
+            background: #00ff41;
+            color: #000;
+            padding: 2px 5px;
+            font-weight: bold;
+            font-size: 0.8em;
+            margin-right: 10px;
+        }
+
+        .btn-sync {
+            display: block;
+            text-align: center;
+            border: 1px solid #00ff41;
+            padding: 15px;
+            color: #00ff41;
+            text-decoration: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+
+        .btn-sync:hover {
+            background: #00ff41;
+            color: #000;
+            box-shadow: 0 0 30px #00ff41;
+        }
+
+        .blink { animation: blinker 1s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
+
+        .footer {
+            text-align: center;
+            font-size: 0.5em;
+            margin-top: 30px;
+            color: #00441b;
+        }
     </style>
 </head>
 <body>
     <div class='container'>
-        <h1>(==TOMI==) Mading Misi</h1>
-        <div class='status-box'>
-            <strong>STATUS SYSTEM:</strong> PR-TSA-B.1.11.001<br>
-            <strong>UPDATE TERAKHIR:</strong> 06 Mei 2026
-        </div>
-        
-        <h3>📍 ZONA MISI (Parkir Terakhir)</h3>
-        <div class='misi-card high'>
-            <strong>[PRIORITAS TINGGI]</strong><br>
-            Setup GitHub Pages - Inisialisasi Mading Digital.
-        </div>
-        <div class='misi-card'>
-            <strong>[UMUM]</strong><br>
-            Audit GUDANG_PARKIR - Sinkronisasi CSV ke Dashboard.
+        <div class='header'>
+            <h1>[ TSA_TERMINAL_V1 ]</h1>
+            <div style='font-size: 0.6em;'><span class='blink'>></span> MOBILE_APP_MODE_ENABLED</div>
         </div>
 
-        <a href='#' class='btn-sync'>SINKRONKAN DATA (GATE IO)</a>
-        
+        <div class='status-grid'>
+            <div class='status-item'>
+                SYS: PR-TSA-B.1.11<br>
+                MODE: FULLSCREEN
+            </div>
+            <div class='status-item'>
+                SYNC: AUTOMATED<br>
+                BATT: 100%
+            </div>
+        </div>
+
+        <div class='zona-misi'>
+            <div style='background: #00ff41; color: #000; padding: 5px; margin-bottom: 10px; font-weight: bold; font-size: 0.8em;'>
+                >> ACTIVE_ZONA_MISI
+            </div>
+            
+            <div class='misi-card'>
+                <div><span class='tag'>APP</span> Setup Mobile Icon</div>
+                <div>[ DONE ]</div>
+            </div>
+            <div class='misi-card'>
+                <div><span class='tag'>SYS</span> PWA Manifest</div>
+                <div>[ READY ]</div>
+            </div>
+        </div>
+
+        <a href='#' class='btn-sync' onclick='alert("Initiating Gate IO Sync...")'>EXECUTE SINKRONISASI</a>
+
         <div class='footer'>
-            Tommy SuperApps - Landmark B | Protected by Jenifer CLI
+            &copy; 2026 TSA_SYSTEM | ENCRYPTED_BY_TOMI
         </div>
     </div>
 </body>
