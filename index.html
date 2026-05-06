@@ -5,93 +5,109 @@
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
     <meta name='theme-color' content='#0a0a0a'>
     <meta name='apple-mobile-web-app-capable' content='yes'>
-    <meta name='apple-mobile-web-app-status-bar-style' content='black-translucent'>
     <link rel='manifest' href='manifest.json'>
-    <link rel='icon' type='image/png' href='assets/icon-192.png'>
-    <title>TERMINAL - Tommy SuperApps</title>
+    <title>PORTABLE TERMINAL - TSA</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500&display=swap');
-        body { background-color: #0a0a0a; color: #00ff41; font-family: 'Fira Code', monospace; margin: 0; padding: 20px; overflow-x: hidden; }
-        .container { max-width: 900px; margin: auto; border: 1px solid #00ff41; padding: 20px; box-shadow: 0 0 20px rgba(0, 255, 65, 0.2); }
-        .header { text-align: center; border-bottom: 1px solid #00ff41; padding-bottom: 10px; margin-bottom: 20px; }
-        h1 { font-size: 1.2em; text-transform: uppercase; letter-spacing: 3px; text-shadow: 0 0 10px #00ff41; }
-        .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.7em; margin-bottom: 20px; }
-        .status-item { border: 1px solid #00441b; padding: 10px; background: rgba(0, 255, 65, 0.05); }
-        .zona-misi { border: 1px solid #00ff41; padding: 15px; margin-bottom: 20px; }
-        .misi-card { border-bottom: 1px dashed #00441b; padding: 10px 0; display: flex; justify-content: space-between; font-size: 0.8em; }
-        .tag { background: #00ff41; color: #000; padding: 2px 5px; font-weight: bold; font-size: 0.8em; margin-right: 10px; }
-        .btn-sync { display: block; text-align: center; border: 1px solid #00ff41; padding: 15px; color: #00ff41; text-decoration: none; font-weight: bold; text-transform: uppercase; margin-top: 20px; font-size: 0.9em; cursor: pointer; }
-        .btn-sync:hover { background: #00ff41; color: #000; }
+        body { background-color: #000; color: #00ff41; font-family: 'Fira Code', monospace; margin: 0; padding: 15px; }
+        .container { max-width: 600px; margin: auto; border: 1px solid #00ff41; padding: 15px; }
+        .header { text-align: center; border-bottom: 2px solid #00ff41; padding-bottom: 10px; margin-bottom: 15px; }
+        .nav-bar { display: flex; justify-content: space-around; margin-bottom: 15px; border-bottom: 1px solid #00441b; padding-bottom: 10px; }
+        .nav-btn { color: #00ff41; text-decoration: none; font-size: 0.7em; border: 1px solid #00441b; padding: 5px 10px; }
+        .nav-btn.active { background: #00ff41; color: #000; }
+        .status-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 0.6em; background: rgba(0, 255, 65, 0.05); padding: 10px; border: 1px solid #00441b; margin-bottom: 15px; }
+        .misi-list { min-height: 150px; }
+        .misi-card { border: 1px solid #00441b; padding: 10px; margin-bottom: 8px; font-size: 0.75em; display: flex; justify-content: space-between; align-items: center; background: #0a0a0a; }
+        .tag { color: #000; background: #00ff41; padding: 2px 5px; font-size: 0.8em; margin-right: 8px; font-weight: bold; }
+        .input-panel { border: 1px solid #00ff41; padding: 15px; background: rgba(0, 255, 65, 0.02); margin-top: 20px; }
+        input, select, textarea { width: 100%; padding: 10px; background: #000; border: 1px solid #00441b; color: #00ff41; font-family: 'Fira Code', monospace; font-size: 0.8em; margin-bottom: 12px; box-sizing: border-box; }
+        .btn-action { display: block; width: 100%; padding: 12px; background: #00ff41; color: #000; text-align: center; font-weight: bold; border: none; cursor: pointer; text-transform: uppercase; }
+        .footer { text-align: center; font-size: 0.5em; margin-top: 30px; color: #00441b; letter-spacing: 2px; }
         .blink { animation: blinker 1s linear infinite; }
         @keyframes blinker { 50% { opacity: 0; } }
-        .footer { text-align: center; font-size: 0.5em; margin-top: 30px; color: #00441b; }
     </style>
 </head>
 <body>
     <div class='container'>
         <div class='header'>
-            <h1>[ TSA_TERMINAL_V1 ]</h1>
-            <div style='font-size: 0.6em;'><span class='blink'>></span> DATA_SYNC_MODE: JSON</div>
+            <h1>[ PORTABLE_TERMINAL_V1 ]</h1>
+            <div style='font-size: 0.6em;'><span class='blink'>></span> AUTHENTICATED_AS_JENDRAL</div>
         </div>
 
-        <div class='status-grid'>
-            <div class='status-item'>
-                SYS: <span id='sys-version'>LOADING...</span><br>
-                MODE: STANDALONE
-            </div>
-            <div class='status-item'>
-                SYNC: <span id='last-sync'>--:--</span><br>
-                TPP: <span id='tpp-stat'>LOADING...</span>
-            </div>
+        <div class='nav-bar'>
+            <a href='#' class='nav-btn active'>DASHBOARD</a>
+            <a href='#' class='nav-btn'>ZONA_BMD</a>
+            <a href='#' class='nav-btn'>GUARDIAN</a>
         </div>
 
-        <div class='zona-misi'>
-            <div style='background: #00ff41; color: #000; padding: 5px; margin-bottom: 10px; font-weight: bold; font-size: 0.8em;'>
-                >> ACTIVE_ZONA_MISI
-            </div>
-            <div id='misi-container'>
-                <!-- Data akan masuk ke sini via JavaScript -->
-                <div class='misi-card'>[ SYSTEM ] Menunggu Sinkronisasi Data...</div>
-            </div>
+        <div class='status-bar'>
+            <div>VERSION: <span id='v'>...</span></div>
+            <div>LAST_SYNC: <span id='s'>...</span></div>
+            <div>SQL_HEARTBEAT: <span style='color: #00ff41;'>OK</span></div>
+            <div>USER: JENDRAL</div>
         </div>
 
-        <div class='btn-sync' onclick='loadData()'>REFRESH DATA DARI CLOUD</div>
+        <div style='background: #00ff41; color: #000; padding: 3px 10px; font-weight: bold; font-size: 0.7em; margin-bottom: 10px;'>
+            >> LIVE_MONITOR_MISI
+        </div>
+        <div id='misi-list' class='misi-list'>
+            <div style='text-align:center; padding:20px;'>Menghubungkan ke Jantung SQL...</div>
+        </div>
+
+        <div class='input-panel'>
+            <div style='color: #00ff41; font-size: 0.7em; margin-bottom: 10px; border-left: 3px solid #00ff41; padding-left: 10px;'>
+                COMMAND_INPUT (Direct to SQL)
+            </div>
+            <input type='text' id='task-uraian' placeholder='Uraian Misi...'>
+            <select id='task-prio'>
+                <option value='P1'>P1 (URGENT)</option>
+                <option value='P2'>P2 (NORMAL)</option>
+                <option value='Khusus'>KHUSUS</option>
+            </select>
+            <button class='btn-action' onclick='sendToGate()'>EKSEKUSI_INPUT</button>
+        </div>
 
         <div class='footer'>
-            &copy; 2026 TSA_SYSTEM | ENCRYPTED_BY_TOMI
+            &copy; 2026 TOMMY_SUPERAPPS_ECOSYSTEM | LINKED_VIA_GUDANG_PARKIR
         </div>
     </div>
 
     <script>
-        async function loadData() {
+        async function loadStatus() {
             try {
-                const response = await fetch('status.json?v=' + Date.now());
-                const data = await response.json();
+                const res = await fetch('status.json?v=' + Date.now());
+                const data = await res.json();
+                document.getElementById('v').innerText = data.version;
+                document.getElementById('s').innerText = data.last_sync;
                 
-                document.getElementById('sys-version').innerText = data.version;
-                document.getElementById('last-sync').innerText = data.last_sync;
-                document.getElementById('tpp-stat').innerText = data.tpp.persen + '% (Rp ' + data.tpp.rupiah.toLocaleString() + ')';
-                
-                const container = document.getElementById('misi-container');
-                container.innerHTML = '';
-                
-                data.misi.forEach(item => {
+                const list = document.getElementById('misi-list');
+                list.innerHTML = '';
+                data.misi.forEach(m => {
                     const card = document.createElement('div');
                     card.className = 'misi-card';
-                    card.innerHTML = '<div><span class="tag">' + item.prioritas + '</span>' + item.uraian + '</div><div>[ ' + item.status + ' ]</div>';
-                    container.appendChild(card);
+                    card.innerHTML = '<div><span class=\"tag\">' + m.prioritas + '</span>' + m.uraian + '</div>' +
+                                     '<div style=\"color:' + (m.status == 1 ? '#00ff41' : '#ff4444') + '\">[' + (m.status == 1 ? 'DONE' : 'PENDING') + ']</div>';
+                    list.appendChild(card);
                 });
-            } catch (err) {
-                console.error('Gagal memuat data:', err);
-            }
+            } catch (e) { console.error(e); }
         }
-        
-        // Load data otomatis saat dibuka
-        loadData();
 
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js');
+        function sendToGate() {
+            const uraian = document.getElementById('task-uraian').value;
+            const prio = document.getElementById('task-prio').value;
+            if(!uraian) return alert('Command Kosong!');
+
+            // METODE INTERAKTIF: JALUR GATES TELEGRAM
+            // Menggunakan Deep Link untuk mengirim perintah ke Bot Jenifer yang stand-by di SQL Lokal
+            const cmd = encodeURIComponent('/Task ' + prio + ' ' + uraian);
+            window.location.href = 'tg://msg?text=' + cmd;
+            
+            document.getElementById('task-uraian').value = '';
+            alert('Command Terkirim ke Jalur Telegram Komando!');
         }
+
+        loadStatus();
+        setInterval(loadStatus, 30000); // Auto-Sync tiap 30 detik
     </script>
 </body>
 </html>
