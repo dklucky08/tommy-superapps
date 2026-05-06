@@ -125,21 +125,28 @@
             color: #00441b;
         }
     </style>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('Service Worker Registered'))
+            .catch(err => console.log('Service Worker Failed', err));
+        }
+    </script>
 </head>
 <body>
     <div class='container'>
         <div class='header'>
             <h1>[ TSA_TERMINAL_V1 ]</h1>
-            <div style='font-size: 0.6em;'><span class='blink'>></span> MOBILE_APP_MODE_ENABLED</div>
+            <div style='font-size: 0.6em;'><span class='blink'>></span> PWA_FULL_POWER_ENABLED</div>
         </div>
 
         <div class='status-grid'>
             <div class='status-item'>
                 SYS: PR-TSA-B.1.11<br>
-                MODE: FULLSCREEN
+                MODE: STANDALONE
             </div>
             <div class='status-item'>
-                SYNC: AUTOMATED<br>
+                SYNC: PWA_ACTIVE<br>
                 BATT: 100%
             </div>
         </div>
@@ -150,16 +157,16 @@
             </div>
             
             <div class='misi-card'>
-                <div><span class='tag'>APP</span> Setup Mobile Icon</div>
-                <div>[ DONE ]</div>
+                <div><span class='tag'>PWA</span> Service Worker</div>
+                <div>[ ACTIVE ]</div>
             </div>
             <div class='misi-card'>
-                <div><span class='tag'>SYS</span> PWA Manifest</div>
-                <div>[ READY ]</div>
+                <div><span class='tag'>SYS</span> Full Install Mode</div>
+                <div>[ ENABLED ]</div>
             </div>
         </div>
 
-        <a href='#' class='btn-sync' onclick='alert("Initiating Gate IO Sync...")'>EXECUTE SINKRONISASI</a>
+        <a href='#' class='btn-sync' onclick='alert("Initiating PWA Sync...")'>EXECUTE SINKRONISASI</a>
 
         <div class='footer'>
             &copy; 2026 TSA_SYSTEM | ENCRYPTED_BY_TOMI
