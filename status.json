@@ -1,36 +1,138 @@
 {
-    "version": "PR-TSA-B.1.11.001",
-    "last_sync": "06-05-2026 16:26",
-    "misi": [
-        {
-            "uraian": "TAMSIL - Ingatkan Mba desta salah kode billing Tamsil",
-            "status": 0,
-            "prioritas": "P1"
+    "version": "PR-TSA-B.1.12.001",
+    "last_sync": "06-05-2026 17:03",
+    "modules": {
+        "tasks": [
+            {
+                "id": 69,
+                "uraian": "TAMSIL - Ingatkan Mba desta salah kode billing Tamsil",
+                "status": 0,
+                "prioritas": "P1",
+                "deadline": "2026-05-07"
+            },
+            {
+                "id": 67,
+                "uraian": "DESK RENJA - Buat RKBMD 2027 (518.000.000)",
+                "status": 0,
+                "prioritas": "Khusus",
+                "deadline": "2026-05-07"
+            },
+            {
+                "id": 66,
+                "uraian": "DESK RENJA - Print Pra Renja 2027 dan Koordinasi ke BPPKAD",
+                "status": 0,
+                "prioritas": "Khusus",
+                "deadline": "2026-05-07"
+            },
+            {
+                "id": 26,
+                "uraian": "Pembuatan rencana Kerja Untuk WFH Di aplikasi Masbrow",
+                "status": 0,
+                "prioritas": "Khusus",
+                "deadline": "2026-05-17"
+            },
+            {
+                "id": 21,
+                "uraian": "Rekap BMD bukan dari belanja Modal Pemeliharaan - Gunakan Super Apss untuk mencatat",
+                "status": 0,
+                "prioritas": "P2",
+                "deadline": "2026-04-28"
+            },
+            {
+                "id": 8,
+                "uraian": "Pencatatan Non Tender Sirup",
+                "status": 0,
+                "prioritas": "P1",
+                "deadline": "2026-04-30"
+            }
+        ],
+        "guardian": {
+            "config": {
+                "p_disiplin": 798582.0,
+                "p_produktivitas": 1197873.0,
+                "total": 1996455.0
+            },
+            "logs": [
+                {
+                    "kategori": "TL",
+                    "persen_potongan": 0.5,
+                    "rupiah_potongan": 3993.0,
+                    "tanggal": "2026-05-06"
+                },
+                {
+                    "kategori": "PC",
+                    "persen_potongan": 1.5,
+                    "rupiah_potongan": 11979.0,
+                    "tanggal": "2026-05-05"
+                },
+                {
+                    "kategori": "TL",
+                    "persen_potongan": 0.5,
+                    "rupiah_potongan": 3993.0,
+                    "tanggal": "2026-05-04"
+                },
+                {
+                    "kategori": "TL",
+                    "persen_potongan": 0.25,
+                    "rupiah_potongan": 1996.0,
+                    "tanggal": "2026-05-02"
+                }
+            ]
         },
-        {
-            "uraian": "DESK RENJA - pembuatan Hasil laporan Desk ",
-            "status": 1,
-            "prioritas": "Khusus"
-        },
-        {
-            "uraian": "DESK RENJA - Buat RKBMD 2027 (518.000.000)",
-            "status": 0,
-            "prioritas": "Khusus"
-        },
-        {
-            "uraian": "DESK RENJA - Print Pra Renja 2027 dan Koordinasi ke BPPKAD",
-            "status": 0,
-            "prioritas": "Khusus"
-        },
-        {
-            "uraian": "Desk Renja Ke Setda Bag.Adbang,PBJ,Prokompim",
-            "status": 1,
-            "prioritas": "Khusus"
+        "bmd": [
+            {
+                "nama_barang": "Tanah Bangunan Kantor Pemerintah",
+                "kode_barang": "01.01.01.04.001",
+                "harga": 134400000.0
+            },
+            {
+                "nama_barang": "Portable Generating Set",
+                "kode_barang": "02.01.03.04.002",
+                "harga": 17250000.0
+            },
+            {
+                "nama_barang": "Portable Generating Set",
+                "kode_barang": "02.01.03.04.002",
+                "harga": 147550000.0
+            },
+            {
+                "nama_barang": "Portable Generating Set",
+                "kode_barang": "02.01.03.04.002",
+                "harga": 85962800.0
+            },
+            {
+                "nama_barang": "Stationary Generating Set",
+                "kode_barang": "02.01.03.04.003",
+                "harga": 119000000.0
+            },
+            {
+                "nama_barang": "Pompa Air",
+                "kode_barang": "02.01.03.05.010",
+                "harga": 2640000.0
+            },
+            {
+                "nama_barang": "Station Wagon",
+                "kode_barang": "02.02.01.01.003",
+                "harga": 104100000.0
+            },
+            {
+                "nama_barang": "Station Wagon",
+                "kode_barang": "02.02.01.01.003",
+                "harga": 130650000.0
+            },
+            {
+                "nama_barang": "Station Wagon",
+                "kode_barang": "02.02.01.01.003",
+                "harga": 153260000.0
+            },
+            {
+                "nama_barang": "Station Wagon",
+                "kode_barang": "02.02.01.01.003",
+                "harga": 311319500.0
+            }
+        ],
+        "stats": {
+            "completed": "45"
         }
-    ],
-    "tpp": {
-        "persen": 100,
-        "rupiah": 0
-    },
-    "system": "ACTIVE"
+    }
 }
