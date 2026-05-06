@@ -11,143 +11,37 @@
     <title>TERMINAL - Tommy SuperApps</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500&display=swap');
-
-        body { 
-            background-color: #0a0a0a; 
-            color: #00ff41; 
-            font-family: 'Fira Code', 'Courier New', Courier, monospace; 
-            margin: 0; 
-            padding: 20px;
-            overflow-x: hidden;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-
-        body::before {
-            content: " ";
-            display: block;
-            position: fixed;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 2;
-            background-size: 100% 2px, 3px 100%;
-            pointer-events: none;
-        }
-
-        .container { 
-            max-width: 900px; 
-            margin: auto; 
-            border: 1px solid #00ff41; 
-            padding: 20px; 
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
-            position: relative;
-            z-index: 1;
-        }
-
-        .header {
-            text-align: center;
-            border-bottom: 1px solid #00ff41;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-
-        h1 { 
-            font-size: 1.2em; 
-            text-transform: uppercase; 
-            letter-spacing: 3px;
-            text-shadow: 0 0 10px #00ff41;
-        }
-
-        .status-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            font-size: 0.7em;
-            margin-bottom: 20px;
-        }
-
-        .status-item {
-            border: 1px solid #00441b;
-            padding: 10px;
-            background: rgba(0, 255, 65, 0.05);
-        }
-
-        .zona-misi {
-            border: 1px solid #00ff41;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-
-        .misi-card {
-            border-bottom: 1px dashed #00441b;
-            padding: 10px 0;
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8em;
-        }
-
-        .tag {
-            background: #00ff41;
-            color: #000;
-            padding: 2px 5px;
-            font-weight: bold;
-            font-size: 0.8em;
-            margin-right: 10px;
-        }
-
-        .btn-sync {
-            display: block;
-            text-align: center;
-            border: 1px solid #00ff41;
-            padding: 15px;
-            color: #00ff41;
-            text-decoration: none;
-            font-weight: bold;
-            text-transform: uppercase;
-            transition: all 0.3s;
-            margin-top: 20px;
-            font-size: 0.9em;
-        }
-
-        .btn-sync:hover {
-            background: #00ff41;
-            color: #000;
-            box-shadow: 0 0 30px #00ff41;
-        }
-
+        body { background-color: #0a0a0a; color: #00ff41; font-family: 'Fira Code', monospace; margin: 0; padding: 20px; overflow-x: hidden; }
+        .container { max-width: 900px; margin: auto; border: 1px solid #00ff41; padding: 20px; box-shadow: 0 0 20px rgba(0, 255, 65, 0.2); }
+        .header { text-align: center; border-bottom: 1px solid #00ff41; padding-bottom: 10px; margin-bottom: 20px; }
+        h1 { font-size: 1.2em; text-transform: uppercase; letter-spacing: 3px; text-shadow: 0 0 10px #00ff41; }
+        .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.7em; margin-bottom: 20px; }
+        .status-item { border: 1px solid #00441b; padding: 10px; background: rgba(0, 255, 65, 0.05); }
+        .zona-misi { border: 1px solid #00ff41; padding: 15px; margin-bottom: 20px; }
+        .misi-card { border-bottom: 1px dashed #00441b; padding: 10px 0; display: flex; justify-content: space-between; font-size: 0.8em; }
+        .tag { background: #00ff41; color: #000; padding: 2px 5px; font-weight: bold; font-size: 0.8em; margin-right: 10px; }
+        .btn-sync { display: block; text-align: center; border: 1px solid #00ff41; padding: 15px; color: #00ff41; text-decoration: none; font-weight: bold; text-transform: uppercase; margin-top: 20px; font-size: 0.9em; cursor: pointer; }
+        .btn-sync:hover { background: #00ff41; color: #000; }
         .blink { animation: blinker 1s linear infinite; }
         @keyframes blinker { 50% { opacity: 0; } }
-
-        .footer {
-            text-align: center;
-            font-size: 0.5em;
-            margin-top: 30px;
-            color: #00441b;
-        }
+        .footer { text-align: center; font-size: 0.5em; margin-top: 30px; color: #00441b; }
     </style>
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js')
-            .then(reg => console.log('Service Worker Registered'))
-            .catch(err => console.log('Service Worker Failed', err));
-        }
-    </script>
 </head>
 <body>
     <div class='container'>
         <div class='header'>
             <h1>[ TSA_TERMINAL_V1 ]</h1>
-            <div style='font-size: 0.6em;'><span class='blink'>></span> PWA_FULL_POWER_ENABLED</div>
+            <div style='font-size: 0.6em;'><span class='blink'>></span> DATA_SYNC_MODE: JSON</div>
         </div>
 
         <div class='status-grid'>
             <div class='status-item'>
-                SYS: PR-TSA-B.1.11<br>
+                SYS: <span id='sys-version'>LOADING...</span><br>
                 MODE: STANDALONE
             </div>
             <div class='status-item'>
-                SYNC: PWA_ACTIVE<br>
-                BATT: 100%
+                SYNC: <span id='last-sync'>--:--</span><br>
+                TPP: <span id='tpp-stat'>LOADING...</span>
             </div>
         </div>
 
@@ -155,22 +49,49 @@
             <div style='background: #00ff41; color: #000; padding: 5px; margin-bottom: 10px; font-weight: bold; font-size: 0.8em;'>
                 >> ACTIVE_ZONA_MISI
             </div>
-            
-            <div class='misi-card'>
-                <div><span class='tag'>PWA</span> Service Worker</div>
-                <div>[ ACTIVE ]</div>
-            </div>
-            <div class='misi-card'>
-                <div><span class='tag'>SYS</span> Full Install Mode</div>
-                <div>[ ENABLED ]</div>
+            <div id='misi-container'>
+                <!-- Data akan masuk ke sini via JavaScript -->
+                <div class='misi-card'>[ SYSTEM ] Menunggu Sinkronisasi Data...</div>
             </div>
         </div>
 
-        <a href='#' class='btn-sync' onclick='alert("Initiating PWA Sync...")'>EXECUTE SINKRONISASI</a>
+        <div class='btn-sync' onclick='loadData()'>REFRESH DATA DARI CLOUD</div>
 
         <div class='footer'>
             &copy; 2026 TSA_SYSTEM | ENCRYPTED_BY_TOMI
         </div>
     </div>
+
+    <script>
+        async function loadData() {
+            try {
+                const response = await fetch('status.json?v=' + Date.now());
+                const data = await response.json();
+                
+                document.getElementById('sys-version').innerText = data.version;
+                document.getElementById('last-sync').innerText = data.last_sync;
+                document.getElementById('tpp-stat').innerText = data.tpp.persen + '% (Rp ' + data.tpp.rupiah.toLocaleString() + ')';
+                
+                const container = document.getElementById('misi-container');
+                container.innerHTML = '';
+                
+                data.misi.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'misi-card';
+                    card.innerHTML = '<div><span class="tag">' + item.prioritas + '</span>' + item.uraian + '</div><div>[ ' + item.status + ' ]</div>';
+                    container.appendChild(card);
+                });
+            } catch (err) {
+                console.error('Gagal memuat data:', err);
+            }
+        }
+        
+        // Load data otomatis saat dibuka
+        loadData();
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js');
+        }
+    </script>
 </body>
 </html>

@@ -1,0 +1,36 @@
+{
+    "version": "PR-TSA-B.1.11.001",
+    "last_sync": "06-05-2026 16:26",
+    "misi": [
+        {
+            "uraian": "TAMSIL - Ingatkan Mba desta salah kode billing Tamsil",
+            "status": 0,
+            "prioritas": "P1"
+        },
+        {
+            "uraian": "DESK RENJA - pembuatan Hasil laporan Desk ",
+            "status": 1,
+            "prioritas": "Khusus"
+        },
+        {
+            "uraian": "DESK RENJA - Buat RKBMD 2027 (518.000.000)",
+            "status": 0,
+            "prioritas": "Khusus"
+        },
+        {
+            "uraian": "DESK RENJA - Print Pra Renja 2027 dan Koordinasi ke BPPKAD",
+            "status": 0,
+            "prioritas": "Khusus"
+        },
+        {
+            "uraian": "Desk Renja Ke Setda Bag.Adbang,PBJ,Prokompim",
+            "status": 1,
+            "prioritas": "Khusus"
+        }
+    ],
+    "tpp": {
+        "persen": 100,
+        "rupiah": 0
+    },
+    "system": "ACTIVE"
+}
