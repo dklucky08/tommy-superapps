@@ -1,6 +1,6 @@
 {
     "version": "PR-TSA-B.1.16.000",
-    "last_sync": "12-05-2026 11:43:57",
+    "last_sync": "12-05-2026 12:33:53",
     "data": {
         "tasks": {
             "pending": [
@@ -9,9 +9,33 @@
                     "prioritas": "Khusus",
                     "deadline": "2026-05-11",
                     "kategori": "PEP",
-                    "uraian": "SIPD - Entry Pergeseran Pra RKA 2027 (Sub keg Peralatan Rumah Tangga dan PPPK Paruh 14 Bulan)",
+                    "uraian": "SIPD - Entry Pergeseran Pra RKA 2027 Sub Keg Alat Kantor Pindah Ke Alat rumah tangga",
                     "status": 0,
                     "created_at": "2026-05-11 00:29:40",
+                    "completed_at": null,
+                    "duration_minutes": null,
+                    "position": 0
+                },
+                {
+                    "id": 77,
+                    "prioritas": "Khusus",
+                    "deadline": "2026-05-12",
+                    "kategori": "PEP",
+                    "uraian": "SIPD - Entry Pergeseran Pra RKA 2027 Memindah dengan mengurangi 16.100.000 dari Sub Keg Pemeliharaan Gedung ke Pelayanan Umum (P3kPW SMA)",
+                    "status": 0,
+                    "created_at": "2026-05-12 04:58:00",
+                    "completed_at": null,
+                    "duration_minutes": null,
+                    "position": 0
+                },
+                {
+                    "id": 78,
+                    "prioritas": "Khusus",
+                    "deadline": "2026-05-12",
+                    "kategori": "PEP",
+                    "uraian": "SIPD - Entry Pergeseran Pra RKA 2027 Menambah Anggaran P3KPW S1 dari pengelola Media Ke Pelayanan umum",
+                    "status": 0,
+                    "created_at": "2026-05-12 04:58:53",
                     "completed_at": null,
                     "duration_minutes": null,
                     "position": 0
