@@ -3,43 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
-    <title>TSA MOBILE - AZURE FRESH V5</title>
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>TSA MOBILE - AZURE ULTRA V5</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">    
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
         [x-cloak] { display: none !important; }
-        :root {
-            --azure-bg: #f8fafc;
-            --azure-accent: #0ea5e9;
-        }
-        body {
-            background-color: var(--azure-bg);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border: 1px solid #e2e8f0;
-            border-radius: 1.5rem;
-        }
-        .safe-bottom { padding-bottom: calc(1.5rem + env(safe-area-inset-bottom)); }
+        :root { --azure-bg: #f8fafc; --azure-accent: #0ea5e9; }
+        body { background-color: var(--azure-bg); font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid #e2e8f0; border-radius: 1.5rem; }
         .tab-active { color: var(--azure-accent); }
         .tab-inactive { color: #94a3b8; }
-
-        /* Custom Scroll */
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        /* Animation */
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .animate-up { animation: slideUp 0.4s ease-out; }
     </style>
 </head>
@@ -62,136 +39,90 @@
     <!-- CONTENT AREA -->
     <main class="pt-20 pb-32 px-5 max-w-md mx-auto">
 
-        <!-- MODULE: DASHBOARD -->
+        <!-- DASHBOARD -->
         <div x-show="activeTab === 'dash'" class="animate-up">
             <div class="grid grid-cols-2 gap-4 mb-6">
-                <div class="glass-card p-5 border-blue-50">
-                    <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Misi Tuntas</p>
+                <div class="glass-card p-5">
+                    <p class="text-[9px] font-black text-slate-400 uppercase">Misi Tuntas</p>
                     <h2 class="text-2xl font-black text-slate-800" x-text="stats.completed">0</h2>
                 </div>
-                <div class="glass-card p-5 border-amber-50">
-                    <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Status TPP</p>
+                <div class="glass-card p-5">
+                    <p class="text-[9px] font-black text-slate-400 uppercase">Status TPP</p>
                     <h2 class="text-2xl font-black text-amber-600" x-text="stats.tpp">0%</h2>
                 </div>
             </div>
-
-            <div class="glass-card p-6 mb-6">
-                <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-4 flex items-center"> 
-                    <i class="fas fa-bullhorn mr-2 text-sky-500"></i> Landasan Command
-                </h3>
-                <div class="space-y-4">
-                    <button @click="openModal('task')" class="w-full bg-sky-600 text-white p-4 rounded-2xl font-black text-[11px] shadow-lg shadow-sky-200 active:scale-95 transition flex items-center justify-center">        
-                        <i class="fas fa-plus-circle mr-2 text-sm"></i> INPUT MISI BARU
-                    </button>
-                    <div class="grid grid-cols-2 gap-3">
-                        <button @click="openModal('absen')" class="bg-white border-2 border-slate-100 text-slate-600 p-4 rounded-2xl font-black text-[10px] active:scale-95 transition">
-                            <i class="fas fa-fingerprint mb-1 block text-sky-500 text-lg"></i> ABSENSI
-                        </button>
-                        <button @click="openModal('wfh')" class="bg-white border-2 border-slate-100 text-slate-600 p-4 rounded-2xl font-black text-[10px] active:scale-95 transition">
-                            <i class="fas fa-home mb-1 block text-emerald-500 text-lg"></i> WFH
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- RECENT TASKS SHORTCUT -->
-            <div class="px-2 mb-4 flex justify-between items-center">
-                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Misi Prioritas</h3> 
-                <span class="text-[9px] font-bold text-sky-500" @click="activeTab = 'task'">LIHAT SEMUA</span>  
-            </div>
+            <button @click="openModal('task')" class="w-full bg-sky-600 text-white p-4 rounded-2xl font-black text-[11px] mb-6 shadow-lg shadow-sky-100">+ INPUT MISI BARU</button>
+            
+            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 ml-1">Prioritas Utama</h3>
             <div class="space-y-3">
                 <template x-for="t in tasks.pending.slice(0, 3)" :key="t.id">
-                    <div @click="editTask(t)" class="glass-card p-4 flex items-center space-x-4 border-l-4" :class="getPriorityColor(t.prioritas)">
-                        <div class="flex-1">
-                            <p class="text-[11px] font-bold text-slate-700 leading-tight" x-text="t.uraian"></p>
-                            <div class="flex items-center mt-1 space-x-2 text-[8px] font-black text-slate-400 uppercase">
-                                <span x-text="t.kategori"></span>
-                                <span class="text-sky-500" x-text="t.deadline"></span>
-                            </div>
-                        </div>
+                    <div @click="editTask(t)" class="glass-card p-4 border-l-4" :class="getPriorityColor(t.prioritas)">
+                        <p class="text-[11px] font-bold text-slate-700" x-text="t.uraian"></p>
                     </div>
                 </template>
             </div>
         </div>
 
-        <!-- MODULE: TASKS -->
+        <!-- MISI LIST -->
         <div x-show="activeTab === 'task'" x-cloak class="animate-up">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl font-black text-slate-800 italic">Command Center</h2>
-                <button @click="openModal('task')" class="w-10 h-10 bg-sky-600 text-white rounded-full shadow-lg shadow-sky-200"><i class="fas fa-plus"></i></button>
-            </div>
-
+            <h2 class="text-xl font-black text-slate-800 mb-6 italic">Command Center</h2>
             <div class="space-y-3">
                 <template x-for="t in tasks.pending" :key="t.id">
                     <div class="glass-card p-4 border-l-4" :class="getPriorityColor(t.prioritas)">
                         <div class="flex justify-between items-start mb-2">
                             <span class="bg-slate-100 text-[8px] font-black px-2 py-0.5 rounded-full text-slate-500" x-text="t.prioritas"></span>
                             <div class="flex space-x-2">
-                                <button @click="editTask(t)" class="text-slate-400 p-1"><i class="fas fa-edit"></i></button>
-                                <button @click="deleteTask(t)" class="text-red-300 p-1"><i class="fas fa-trash-alt"></i></button>
+                                <button @click="editTask(t)" class="text-slate-400"><i class="fas fa-edit"></i></button>
+                                <button @click="deleteTask(t)" class="text-red-300"><i class="fas fa-trash"></i></button>
                             </div>
                         </div>
                         <p class="text-xs font-bold text-slate-700 mb-3" x-text="t.uraian"></p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-[8px] font-black text-sky-500" x-text="t.deadline"></span>
-                            <button @click="completeTask(t)" class="bg-emerald-500 text-white px-4 py-2 rounded-xl text-[9px] font-black">SELESAIKAN</button>
-                        </div>
+                        <button @click="completeTask(t)" class="w-full bg-emerald-500 text-white py-2 rounded-xl text-[9px] font-black">SELESAIKAN</button>
                     </div>
                 </template>
             </div>
         </div>
 
-        <!-- MODULE: ALAT KERJA (TOOLS) -->
+        <!-- ALAT KERJA -->
         <div x-show="activeTab === 'tools'" x-cloak class="animate-up">
             <h2 class="text-xl font-black text-slate-800 mb-6">Alat Kerja</h2>
             
-            <div class="grid grid-cols-1 gap-4">
-                <div class="glass-card p-5 flex items-center space-x-4 border-b-4 border-slate-700">
-                    <div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-700">
-                        <i class="fas fa-vault text-xl"></i>
-                    </div>
-                    <div class="flex-1">
-                        <h4 class="text-sm font-black text-slate-800 uppercase">Strategic Vault</h4>
-                        <p class="text-[9px] font-bold text-slate-400">Password & Key Manager</p>
-                    </div>
+            <!-- VAULT SECTION (Ditarik dari Notes dengan label/kategori Vault) -->
+            <div class="mb-6">
+                <h3 class="text-[10px] font-black text-slate-400 uppercase mb-3 flex items-center"><i class="fas fa-vault mr-2"></i> Strategic Vault</h3>
+                <div class="space-y-2">
+                    <template x-for="note in notes.filter(n => n.kategori === 'Vault' || n.label === 'Vault')" :key="note.id">
+                        <div class="glass-card p-4 bg-slate-50 border-slate-200">
+                            <p class="text-[10px] font-black text-slate-800" x-text="note.judul"></p>
+                            <p class="text-[9px] text-slate-500 mt-1 break-all" x-text="note.isi"></p>
+                        </div>
+                    </template>
                 </div>
+            </div>
 
-                <div class="glass-card p-5 flex items-center space-x-4 border-b-4 border-orange-500">
-                    <div class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-500">
-                        <i class="fas fa-note-sticky text-xl"></i>
-                    </div>
-                    <div class="flex-1">
-                        <h4 class="text-sm font-black text-slate-800 uppercase">Strategic Notes</h4>
-                        <p class="text-[9px] font-bold text-slate-400">Quick Memo & Reference</p>
-                    </div>
-                </div>
-
-                <div class="glass-card p-5 flex items-center space-x-4 border-b-4 border-blue-500">
-                    <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-500">
-                        <i class="fas fa-users-gear text-xl"></i>
-                    </div>
-                    <div class="flex-1">
-                        <h4 class="text-sm font-black text-slate-800 uppercase">Data Personil</h4>
-                        <p class="text-[9px] font-bold text-slate-400">Database Pegawai & NIP</p>
-                    </div>
+            <!-- NOTES SECTION -->
+            <div class="mb-6">
+                <h3 class="text-[10px] font-black text-slate-400 uppercase mb-3 flex items-center"><i class="fas fa-note-sticky mr-2"></i> Strategic Notes</h3>
+                <div class="space-y-2">
+                    <template x-for="note in notes.filter(n => n.kategori !== 'Vault')" :key="note.id">
+                        <div class="glass-card p-4">
+                            <p class="text-[10px] font-black text-sky-600 mb-1" x-text="note.kategori"></p>
+                            <p class="text-[11px] font-bold text-slate-700" x-text="note.judul"></p>
+                            <p class="text-[9px] text-slate-500 mt-2 line-clamp-2" x-text="note.isi"></p>
+                        </div>
+                    </template>
                 </div>
             </div>
         </div>
 
-        <!-- MODULE: BMD -->
+        <!-- BMD / ASET -->
         <div x-show="activeTab === 'bmd'" x-cloak class="animate-up">
-            <div class="mb-6">
-                <input type="text" x-model="bmdSearch" placeholder="Cari Kode atau Nama Barang..." class="w-full bg-white border border-slate-200 p-4 rounded-2xl text-xs font-bold focus:outline-none focus:ring-2 focus:ring-sky-500/20">
-            </div>
+            <input type="text" x-model="bmdSearch" placeholder="Cari Barang..." class="w-full bg-white border p-4 rounded-2xl text-xs font-bold mb-6">
             <div class="space-y-3">
                 <template x-for="item in filteredBMD" :key="item.id">
                     <div class="glass-card p-4">
-                        <p class="text-[8px] font-black text-slate-400 uppercase mb-1" x-text="item.kode_barang"></p>
+                        <p class="text-[8px] font-black text-slate-400" x-text="item.kode_barang"></p>
                         <p class="text-xs font-black text-slate-700" x-text="item.nama_barang"></p>
-                        <div class="flex justify-between items-center mt-2">
-                            <span class="text-[9px] font-bold text-slate-500" x-text="item.asal_perolehan"></span>
-                            <span class="text-[9px] font-black text-sky-600" x-text="'Rp ' + formatPrice(item.harga)"></span>
-                        </div>
                     </div>
                 </template>
             </div>
@@ -199,272 +130,81 @@
 
     </main>
 
-    <!-- BOTTOM NAVIGATION -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-slate-100 z-50 safe-bottom">
+    <!-- NAVIGATION -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t z-50 safe-bottom">
         <div class="max-w-md mx-auto flex justify-around py-3">
-            <button @click="activeTab = 'dash'" :class="activeTab === 'dash' ? 'tab-active' : 'tab-inactive'" class="flex flex-col items-center">
-                <i class="fas fa-th-large text-lg mb-1"></i>
-                <span class="text-[8px] font-black uppercase">Dash</span>
-            </button>
-            <button @click="activeTab = 'task'" :class="activeTab === 'task' ? 'tab-active' : 'tab-inactive'" class="flex flex-col items-center">
-                <i class="fas fa-tasks text-lg mb-1"></i>
-                <span class="text-[8px] font-black uppercase">Misi</span>
-            </button>
-            <button @click="activeTab = 'tools'" :class="activeTab === 'tools' ? 'tab-active' : 'tab-inactive'" class="flex flex-col items-center">
-                <i class="fas fa-toolbox text-lg mb-1"></i>
-                <span class="text-[8px] font-black uppercase">Alat</span>
-            </button>
-            <button @click="activeTab = 'bmd'" :class="activeTab === 'bmd' ? 'tab-active' : 'tab-inactive'" class="flex flex-col items-center">
-                <i class="fas fa-box text-lg mb-1"></i>
-                <span class="text-[8px] font-black uppercase">Aset</span>
-            </button>
+            <button @click="activeTab = 'dash'" :class="activeTab === 'dash' ? 'tab-active' : 'tab-inactive'" class="flex flex-col items-center"><i class="fas fa-th-large text-lg mb-1"></i><span class="text-[8px] font-black uppercase">Dash</span></button>
+            <button @click="activeTab = 'task'" :class="activeTab === 'task' ? 'tab-active' : 'tab-inactive'" class="flex flex-col items-center"><i class="fas fa-tasks text-lg mb-1"></i><span class="text-[8px] font-black uppercase">Misi</span></button>
+            <button @click="activeTab = 'tools'" :class="activeTab === 'tools' ? 'tab-active' : 'tab-inactive'" class="flex flex-col items-center"><i class="fas fa-toolbox text-lg mb-1"></i><span class="text-[8px] font-black uppercase">Alat</span></button>
+            <button @click="activeTab = 'bmd'" :class="activeTab === 'bmd' ? 'tab-active' : 'tab-inactive'" class="flex flex-col items-center"><i class="fas fa-box text-lg mb-1"></i><span class="text-[8px] font-black uppercase">Aset</span></button>
         </div>
     </nav>
 
-    <!-- MODAL: INPUT/EDIT -->
-    <div x-show="modal.open" x-cloak class="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm flex items-end">
-        <div class="bg-white w-full rounded-t-[2.5rem] p-8 animate-up" @click.away="modal.open = false">        
-            <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-8"></div>
-
-            <h3 class="text-xl font-black text-slate-800 italic mb-6 uppercase" x-text="modal.title"></h3>      
-
-            <!-- FORM: TASK (ADD/EDIT) -->
-            <div x-show="modal.type === 'task'" class="space-y-4">
-                <div>
-                    <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Detail Misi</label>
-                    <textarea x-model="form.task.uraian" rows="3" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-medium border-0 focus:ring-2 focus:ring-sky-500/20"></textarea>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Prioritas</label>
-                        <select x-model="form.task.prio" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-bold border-0">
-                            <option value="P1">P1 (CRITICAL)</option>
-                            <option value="P2">P2 (NORMAL)</option>
-                            <option value="P3">P3 (ROUTINE)</option>
-                            <option value="Khusus">KHUSUS</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Deadline</label>
-                        <input type="date" x-model="form.task.deadline" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-bold border-0">
-                    </div>
-                </div>
-            </div>
-
-            <!-- FORM: ABSEN -->
-            <div x-show="modal.type === 'absen'" class="space-y-4">
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Kategori</label>
-                        <select x-model="form.absen.kat" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-bold border-0">
-                            <option value="TL">TL (TELAT)</option>
-                            <option value="PC">PC (PULANG CEPAT)</option>
-                            <option value="TK">TK (TANPA KETERANGAN)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Jam Kejadian</label>
-                        <input type="time" x-model="form.absen.jam" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-bold border-0">
-                    </div>
-                </div>
-                <div>
-                    <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Alasan / Keterangan</label>
-                    <textarea x-model="form.absen.alasan" rows="2" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-medium border-0"></textarea>
-                </div>
-            </div>
-
-            <!-- FORM: WFH -->
-            <div x-show="modal.type === 'wfh'" class="space-y-4">
-                <div>
-                    <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Rencana Kerja</label>
-                    <textarea x-model="form.wfh.rencana" rows="4" placeholder="1. ...&#10;2. ..." class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-medium border-0"></textarea>
-                </div>
-            </div>
-
-            <button @click="sendToGate()" :disabled="submitting" class="w-full bg-sky-600 text-white p-5 rounded-[1.5rem] font-black text-sm shadow-xl shadow-sky-100 mt-8 disabled:opacity-50">
-                <span x-show="!submitting" x-text="editMode ? 'UPDATE DATA' : 'KONFIRMASI EKSEKUSI'"></span>
-                <span x-show="submitting"><i class="fas fa-circle-notch animate-spin"></i> MEMARKIR DATA...</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- SHADOW DECK (THE UNDERWORLD) -->
+    <!-- SHADOW DECK (Ghost Tasks) -->
     <div x-show="shadowOpen" x-cloak class="fixed inset-0 z-[900] bg-black p-6 flex flex-col">
-        <div class="flex justify-between items-center mb-10">
-            <h2 class="text-2xl font-black text-sky-500 italic uppercase tracking-tighter">Shadow Deck</h2>
-            <button @click="shadowOpen = false" class="w-10 h-10 flex items-center justify-center rounded-full bg-slate-900 text-white">&times;</button>
-        </div>
+        <div class="flex justify-between items-center mb-10"><h2 class="text-2xl font-black text-sky-500 italic uppercase">Shadow Deck</h2><button @click="shadowOpen = false" class="text-white text-2xl">&times;</button></div>
         <div class="flex-1 space-y-4 overflow-y-auto no-scrollbar">
-            <template x-for="task in shadowTasks" :key="task.id">
+            <template x-for="s in shadowTasks" :key="s.id">
                 <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 flex justify-between items-center">
-                    <div>
-                        <p class="text-[8px] font-black text-sky-800 uppercase tracking-widest mb-1">Ghost Task</p>
-                        <span class="text-white font-bold text-sm" x-text="task.uraian"></span>
-                    </div>
+                    <div><p class="text-[8px] font-black text-sky-800 uppercase tracking-widest mb-1">Ghost Task</p><span class="text-white font-bold text-sm" x-text="s.uraian"></span></div>
                     <i class="fas fa-circle-check text-sky-500"></i>
                 </div>
             </template>
         </div>
     </div>
 
+    <!-- MODAL -->
+    <div x-show="modal.open" x-cloak class="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm flex items-end">
+        <div class="bg-white w-full rounded-t-[2.5rem] p-8 animate-up" @click.away="modal.open = false">
+            <h3 class="text-xl font-black text-slate-800 mb-6 uppercase" x-text="modal.title"></h3>
+            <div x-show="modal.type === 'task'" class="space-y-4">
+                <textarea x-model="form.task.uraian" rows="3" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-medium border-0"></textarea>
+                <div class="grid grid-cols-2 gap-4">
+                    <select x-model="form.task.prio" class="bg-slate-50 rounded-2xl p-4 text-sm font-bold"><option value="P1">P1</option><option value="P2">P2</option><option value="P3">P3</option><option value="Khusus">KHUSUS</option></select>
+                    <input type="date" x-model="form.task.deadline" class="bg-slate-50 rounded-2xl p-4 text-sm font-bold">
+                </div>
+            </div>
+            <button @click="sendToGate()" :disabled="submitting" class="w-full bg-sky-600 text-white p-5 rounded-2xl font-black text-sm mt-8 shadow-xl shadow-sky-100"><span x-text="editMode ? 'UPDATE DATA' : 'KONFIRMASI EKSEKUSI'"></span></button>
+        </div>
+    </div>
+
     <script>
         function mobileApp() {
             return {
-                activeTab: 'dash',
-                loading: false,
-                submitting: false,
-                version: 'V5-AZURE',
-                syncTime: 'Syncing...',
+                activeTab: 'dash', loading: false, submitting: false, version: 'V5-AZURE', syncTime: 'Syncing...',
                 stats: { completed: 0, tpp: '100%', potongan_rp: 'Rp 0', kejadian: 0 },
-                tasks: { pending: [], completed: [] },
-                guardian: { logs: [], config: {} },
-                bmd: { items: [] },
-                notes: [],
-                shadowTasks: [],
-                modal: { open: false, type: '', title: '' },
-                editMode: false,
-                editId: null,
-                shadowOpen: false,
-                headerClicks: 0,
-                bmdSearch: '',
-                form: {
-                    task: { uraian: '', prio: 'P2', deadline: new Date().toISOString().split('T')[0] },
-                    absen: { kat: 'TL', jam: '07:31', alasan: '' },
-                    wfh: { rencana: '' }
-                },
-
-                async init() {
-                    await this.refreshData();
-                    setInterval(() => this.refreshData(), 300000); // 5 min
-                },
-
+                tasks: { pending: [], completed: [] }, guardian: { logs: [] }, bmd: { items: [] }, notes: [], shadowTasks: [],
+                modal: { open: false, type: '', title: '' }, editMode: false, editId: null, shadowOpen: false, headerClicks: 0, bmdSearch: '',
+                form: { task: { uraian: '', prio: 'P2', deadline: new Date().toISOString().split('T')[0] } },
+                async init() { await this.refreshData(); setInterval(() => this.refreshData(), 300000); },
                 async refreshData() {
-                    this.loading = true;
-                    try {
-                        const res = await fetch('status.json?v=' + Date.now());
-                        const d = await res.json();
-                        this.version = d.version;
-                        this.syncTime = 'Update: ' + d.last_sync;
-                        this.tasks = d.data.tasks;
-                        this.guardian = d.data.guardian;
-                        this.bmd = d.data.bmd;
-                        this.notes = d.data.notes;
-                        this.shadowTasks = d.data.shadow;
+                    this.loading = true; try {
+                        const res = await fetch('status.json?v=' + Date.now()); const d = await res.json();
+                        this.version = d.version; this.syncTime = 'Update: ' + d.last_sync;
+                        this.tasks = d.data.tasks; this.guardian = d.data.guardian; this.bmd = d.data.bmd; this.notes = d.data.notes; this.shadowTasks = d.data.shadow;
                         this.stats.completed = d.data.stats.total_completed;
                         const total_p = this.guardian.logs.reduce((sum, log) => sum + (log.persen_potongan || 0), 0);
-                        const total_rp = this.guardian.logs.reduce((sum, log) => sum + (log.rupiah_potongan || 0), 0);
                         this.stats.tpp = (100 - total_p).toFixed(1) + '%';
-                        this.stats.potongan_rp = 'Rp ' + total_rp.toLocaleString('id-ID');
-                        this.stats.kejadian = this.guardian.logs.length;
-                    } catch (e) {
-                        this.syncTime = 'Sync Offline';
-                    } finally {
-                        this.loading = false;
-                    }
+                    } catch (e) { this.syncTime = 'Sync Offline'; } finally { this.loading = false; }
                 },
-
-                getPriorityColor(p) {
-                    return { 'P1': 'border-red-500', 'P2': 'border-amber-400', 'P3': 'border-emerald-500', 'Khusus': 'border-purple-500' }[p] || 'border-slate-300';
-                },
-
-                openModal(type) {
-                    this.editMode = false;
-                    this.modal.type = type;
-                    this.modal.title = { 'task': 'Misi Baru', 'absen': 'Lapor Absensi', 'wfh': 'Rencana WFH' }[type];
-                    this.modal.open = true;
-                },
-
-                editTask(t) {
-                    this.editMode = true;
-                    this.editId = t.id;
-                    this.form.task = { uraian: t.uraian, prio: t.prioritas, deadline: t.deadline };
-                    this.modal.type = 'task';
-                    this.modal.title = 'Edit Misi';
-                    this.modal.open = true;
-                },
-
-                deleteTask(t) {
-                    if(confirm('Hapus misi ini?')) {
-                        this.sendAction('delete_task', { id: t.id });
-                    }
-                },
-
-                completeTask(t) {
-                    if(confirm('Selesaikan misi ini?')) {
-                        this.sendAction('complete_task', { id: t.id });
-                    }
-                },
-
-                handleHeaderClick() {
-                    this.headerClicks++;
-                    if(this.headerClicks >= 5) {
-                        this.shadowOpen = true;
-                        this.headerClicks = 0;
-                    }
-                    setTimeout(() => this.headerClicks = 0, 3000);
-                },
-
-                formatPrice(p) {
-                    return (p || 0).toLocaleString('id-ID');
-                },
-
-                get filteredBMD() {
-                    if (!this.bmdSearch) return this.bmd.items.slice(0, 50);
-                    const q = this.bmdSearch.toLowerCase();
-                    return this.bmd.items.filter(i =>
-                        i.nama_barang.toLowerCase().includes(q) ||
-                        i.kode_barang.toLowerCase().includes(q)
-                    ).slice(0, 50);
-                },
-
-                async sendToGate() {
-                    const action = this.editMode ? 'edit_task' : ('add_' + this.modal.type);
-                    const data = { ...this.form[this.modal.type], id: this.editId };
-                    await this.sendAction(action, data);
-                },
-
+                getPriorityColor(p) { return { 'P1': 'border-red-500', 'P2': 'border-amber-400', 'P3': 'border-emerald-500', 'Khusus': 'border-purple-500' }[p] || 'border-slate-300'; },
+                openModal(type) { this.editMode = false; this.modal.type = type; this.modal.title = 'Misi Baru'; this.modal.open = true; },
+                editTask(t) { this.editMode = true; this.editId = t.id; this.form.task = { uraian: t.uraian, prio: t.prioritas, deadline: t.deadline }; this.modal.type = 'task'; this.modal.title = 'Edit Misi'; this.modal.open = true; },
+                deleteTask(t) { if(confirm('Hapus?')) this.sendAction('delete_task', { id: t.id }); },
+                completeTask(t) { if(confirm('Selesai?')) this.sendAction('complete_task', { id: t.id }); },
+                handleHeaderClick() { this.headerClicks++; if(this.headerClicks >= 5) { this.shadowOpen = true; this.headerClicks = 0; } setTimeout(() => this.headerClicks = 0, 3000); },
+                get filteredBMD() { if (!this.bmdSearch) return this.bmd.items.slice(0, 20); const q = this.bmdSearch.toLowerCase(); return this.bmd.items.filter(i => i.nama_barang.toLowerCase().includes(q)).slice(0, 20); },
+                async sendToGate() { const action = this.editMode ? 'edit_task' : 'add_task'; await this.sendAction(action, { ...this.form.task, id: this.editId }); },
                 async sendAction(action, data) {
-                    this.submitting = true;
-                    const TOKEN = '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';
-                    const OWNER = 'dklucky08';
-                    const REPO = 'tommy-superapps';
-                    const FILE_PATH = 'input_hp.json';
-
-                    let payload = { action, timestamp: new Date().toISOString(), data };
-
+                    this.submitting = true; const TOKEN = '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'; const OWNER = 'dklucky08'; const REPO = 'tommy-superapps';
                     try {
-                        const url = 'https://api.github.com/repos/' + OWNER + '/' + REPO + '/contents/' + FILE_PATH;
+                        const url = 'https://api.github.com/repos/' + OWNER + '/' + REPO + '/contents/input_hp.json';
                         const check = await fetch(url, { headers: { 'Authorization': 'token ' + TOKEN } });
-                        let sha = null; let currentData = [];
-                        if (check.ok) {
-                            const meta = await check.json();
-                            sha = meta.sha;
-                            currentData = JSON.parse(decodeURIComponent(escape(atob(meta.content))));
-                        }
-                        currentData.push(payload);
-                        const res = await fetch(url, {
-                            method: 'PUT',
-                            headers: { 'Authorization': 'token ' + TOKEN, 'Content-Type': 'application/json' }, 
-                            body: JSON.stringify({
-                                message: 'Mobile Action: ' + action,
-                                content: btoa(unescape(encodeURIComponent(JSON.stringify(currentData, null, 2)))),
-                                sha: sha
-                            })
-                        });
-
-                        if (res.ok) {
-                            alert('TERPARKIR: Markas akan memprosesnya!');
-                            this.modal.open = false;
-                            if(!this.editMode) this.resetForms();
-                        } else { throw new Error('Gagal Menghubungi Cloud.'); }
-                    } catch (e) { alert('ERROR: ' + e.message); }
-                    finally { this.submitting = false; }
-                },
-
-                resetForms() {
-                    this.form.task = { uraian: '', prio: 'P2', deadline: new Date().toISOString().split('T')[0] };
-                    this.form.absen = { kat: 'TL', jam: '07:31', alasan: '' };
-                    this.form.wfh = { rencana: '' };
+                        let sha = null; let currentData = []; if (check.ok) { const meta = await check.json(); sha = meta.sha; currentData = JSON.parse(decodeURIComponent(escape(atob(meta.content)))); }
+                        currentData.push({ action, timestamp: new Date().toISOString(), data });
+                        const res = await fetch(url, { method: 'PUT', headers: { 'Authorization': 'token ' + TOKEN, 'Content-Type': 'application/json' }, body: JSON.stringify({ message: 'Mobile Action: ' + action, content: btoa(unescape(encodeURIComponent(JSON.stringify(currentData, null, 2)))), sha: sha }) });
+                        if (res.ok) { alert('TERPARKIR!'); this.modal.open = false; }
+                    } catch (e) { alert('ERROR'); } finally { this.submitting = false; }
                 }
             }
         }
