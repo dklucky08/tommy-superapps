@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
-    <title>TSA MOBILE - AZURE COMBAT V5.7</title>
+    <title>TSA MOBILE - AZURE ULTIMATE V5.8</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">    
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -12,36 +12,31 @@
         [x-cloak] { display: none !important; }
         :root { --azure-bg: #f8fafc; --azure-accent: #0ea5e9; }
         body { background-color: var(--azure-bg); font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
-        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid #e2e8f0; border-radius: 1.5rem; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid #e2e8f0; border-radius: 1.5rem; transition: all 0.3s ease; }
         .tab-active { color: var(--azure-accent); transform: translateY(-2px); }
         .tab-inactive { color: #94a3b8; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .animate-up { animation: slideUp 0.4s ease-out; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-        .blink-alert { animation: blink 0.8s infinite; background: #ef4444 !important; color: white !important; }
-        .progress-bar { height: 8px; border-radius: 4px; overflow: hidden; background: #e2e8f0; }
-        .progress-fill { height: 100%; transition: width 1s ease-in-out; }
+        .progress-bar { height: 6px; border-radius: 3px; background: #e2e8f0; overflow: hidden; }
+        .progress-fill { height: 100%; transition: width 1s ease; }
+        .blink-red { animation: blink 1s infinite; }
+        @keyframes blink { 0%, 100% { background: #ef4444; } 50% { background: #fee2e2; } }
     </style>
 </head>
 <body x-data="mobileApp()" x-init="init()">
 
-    <!-- OFFLINE INDICATOR -->
-    <div x-show="!online" x-cloak class="fixed top-0 left-0 right-0 bg-amber-500 text-white text-[9px] font-black py-1 text-center z-[100] tracking-widest">
-        MODE OFFLINE - DATA MENGGUNAKAN CACHE LOKAL
-    </div>
-
-    <!-- BLINK ALERT ABSENSI -->
+    <!-- BLINK ALERT LAYER -->
     <div x-show="blinkAlert" x-cloak class="fixed inset-0 z-[200] bg-red-600/90 flex flex-col items-center justify-center p-10 text-center animate-pulse">
-        <i class="fas fa-clock text-6xl text-white mb-6"></i>
-        <h2 class="text-3xl font-black text-white uppercase italic tracking-tighter">WAKTUNYA ABSEN!</h2>
+        <i class="fas fa-exclamation-triangle text-6xl text-white mb-6"></i>
+        <h2 class="text-3xl font-black text-white uppercase italic tracking-tighter">WAKTUNYA ABSENSI!</h2>
         <p class="text-white/80 font-bold mt-4" x-text="blinkMessage"></p>
-        <button @click="blinkAlert = false" class="mt-10 bg-white text-red-600 px-8 py-4 rounded-2xl font-black uppercase tracking-widest">SAYA MENGERTI</button>
+        <button @click="blinkAlert = false" class="mt-10 bg-white text-red-600 px-8 py-4 rounded-2xl font-black uppercase tracking-widest active:scale-95 transition">SAYA MENGERTI</button>
     </div>
 
     <!-- HEADER -->
     <header class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md border-b border-slate-100 z-50 px-6 py-4 flex justify-between items-center">
-        <div class="flex flex-col">
+        <div>
             <h1 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Tommy SuperApps</h1>       
             <div class="flex items-center space-x-2">
                 <span :class="online ? 'bg-emerald-500' : 'bg-slate-300'" class="w-2 h-2 rounded-full animate-pulse"></span>
@@ -50,148 +45,136 @@
         </div>
         <div class="flex items-center space-x-3">
             <button @click="refreshData()" :class="loading ? 'animate-spin' : ''" class="text-slate-400"><i class="fas fa-sync-alt text-sm"></i></button>
-            <span @click="handleVersionClick()" class="bg-sky-100 text-sky-600 text-[9px] font-black px-2 py-0.5 rounded-full cursor-pointer active:scale-95" x-text="version"></span>
+            <span @click="handleVersionClick()" class="bg-sky-100 text-sky-600 text-[9px] font-black px-2 py-0.5 rounded-full cursor-pointer active:bg-sky-200 transition" x-text="version"></span>
         </div>
     </header>
 
-    <!-- CONTENT AREA -->
+    <!-- MAIN CONTENT -->
     <main class="pt-20 pb-32 px-5 max-w-md mx-auto">
 
-        <!-- MODULE: DASHBOARD (OPTIMIZED) -->
+        <!-- DASHBOARD -->
         <div x-show="activeTab === 'dash'" class="animate-up">
-            <!-- INTELLIGENCE CARDS -->
             <div class="space-y-4 mb-6">
                 <!-- TPP Progress -->
-                <div class="glass-card p-6 border-b-4 border-amber-500 shadow-xl shadow-amber-50">
-                    <div class="flex justify-between items-end mb-4">
-                        <div>
-                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Target TPP 2026</p>
-                            <h2 class="text-3xl font-black text-slate-800" x-text="stats.tpp">0%</h2>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-[8px] font-black text-amber-500 uppercase">Estimasi Potongan</p>
-                            <p class="text-xs font-black text-slate-400" x-text="stats.potongan_rp"></p>
-                        </div>
+                <div class="glass-card p-5 border-b-4 border-amber-500 shadow-xl shadow-amber-50/50">
+                    <div class="flex justify-between items-end mb-3">
+                        <div><p class="text-[8px] font-black text-slate-400 uppercase mb-1 tracking-widest">TPP Productivity</p><h2 class="text-2xl font-black text-slate-800" x-text="stats.tpp">0%</h2></div>
+                        <p class="text-[10px] font-black text-amber-600" x-text="stats.potongan_rp"></p>
                     </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill bg-amber-500" :style="'width: ' + stats.tpp"></div>
-                    </div>
+                    <div class="progress-bar"><div class="progress-fill bg-amber-500" :style="'width: ' + stats.tpp"></div></div>
                 </div>
-
                 <!-- Misi Progress -->
-                <div class="glass-card p-6 border-b-4 border-sky-500 shadow-xl shadow-sky-50">
-                    <div class="flex justify-between items-end mb-4">
-                        <div>
-                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Misi Tuntas</p>
-                            <h2 class="text-3xl font-black text-slate-800" x-text="stats.completed">0</h2>
-                        </div>
-                        <i class="fas fa-flag-checkered text-sky-200 text-2xl"></i>
+                <div class="glass-card p-5 border-b-4 border-sky-500 shadow-xl shadow-sky-50/50">
+                    <div class="flex justify-between items-end mb-3">
+                        <div><p class="text-[8px] font-black text-slate-400 uppercase mb-1 tracking-widest">Mission Status</p><h2 class="text-2xl font-black text-slate-800" x-text="stats.completed">0</h2></div>
+                        <i class="fas fa-check-circle text-sky-200 text-xl"></i>
                     </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill bg-sky-500" :style="'width: ' + missionProgress + '%'"></div>
-                    </div>
+                    <div class="progress-bar"><div class="progress-fill bg-sky-500" :style="'width: ' + missionProgress + '%'"></div></div>
                 </div>
             </div>
 
             <!-- ACTION HUB -->
-            <div class="glass-card p-6 mb-8 bg-gradient-to-br from-white to-sky-50/30">
+            <div class="glass-card p-6 mb-8 bg-gradient-to-br from-white to-sky-50/20 border border-sky-50">
                 <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center"><i class="fas fa-bolt mr-2 text-sky-500"></i> Command Hub</h3>
                 <div class="grid grid-cols-2 gap-3">
-                    <button @click="openModal('task')" class="bg-sky-600 text-white p-4 rounded-2xl font-black text-[10px] shadow-lg shadow-sky-200 uppercase active:scale-95 transition">Input Misi</button>
-                    <button @click="activeTab = 'tools'; activeTool = 'notes'; openModal('note')" class="bg-white border-2 border-slate-50 p-4 rounded-2xl font-black text-[10px] text-slate-600 uppercase active:scale-95 transition">Quick Memo</button>
+                    <button @click="openModal('task')" class="bg-sky-600 text-white p-4 rounded-2xl font-black text-[10px] shadow-lg shadow-sky-100 uppercase active:scale-95 transition">New Mission</button>
+                    <button @click="activeTab = 'tools'; activeTool = 'notes'; openModal('note')" class="bg-white border border-slate-100 p-4 rounded-2xl font-black text-[10px] text-slate-600 uppercase active:scale-95 transition">Intelligence Note</button>
                 </div>
-                <button @click="openModal('absen')" class="w-full mt-3 bg-white border-2 border-slate-100 text-slate-600 p-4 rounded-2xl font-black text-[10px] uppercase flex items-center justify-center active:scale-95 hover:border-emerald-200"><i class="fas fa-fingerprint mr-2 text-emerald-500 text-lg"></i> Lapor Absensi</button>
+                <button @click="openModal('absen')" class="w-full mt-3 bg-white border border-slate-100 p-4 rounded-2xl font-black text-[10px] text-slate-500 uppercase flex items-center justify-center active:scale-95 transition hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-100"><i class="fas fa-fingerprint mr-2 text-lg"></i> Report Attendance</button>
             </div>
             
-            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 ml-1">Misi Prioritas</h3>
+            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 ml-1">Critical Missions</h3>
             <div class="space-y-3">
                 <template x-for="t in tasks.pending.slice(0, 5)" :key="t.id">
                     <div @click="editTask(t)" class="glass-card p-4 border-l-4 flex items-center justify-between" :class="getPriorityColor(t.prioritas)">
-                        <div class="flex-1"><p class="text-[11px] font-bold text-slate-700 leading-tight" x-text="t.uraian"></p><span class="text-[8px] font-black text-sky-500 uppercase mt-1 block" x-text="t.deadline"></span></div>
+                        <div class="flex-1 pr-4"><p class="text-[11px] font-bold text-slate-700 leading-tight" x-text="t.uraian"></p><span class="text-[8px] font-black text-sky-500 uppercase mt-1 block" x-text="t.deadline"></span></div>
                         <i class="fas fa-chevron-right text-slate-200 text-[10px]"></i>
                     </div>
                 </template>
             </div>
         </div>
 
-        <!-- MODULE: TASK LIST -->
+        <!-- MISI LIST -->
         <div x-show="activeTab === 'task'" x-cloak class="animate-up">
             <h2 class="text-xl font-black text-slate-800 mb-6 italic uppercase tracking-tighter">Command Center</h2>
             <div class="space-y-4">
                 <template x-for="t in tasks.pending" :key="t.id">
                     <div class="glass-card p-5 border-l-4" :class="getPriorityColor(t.prioritas)">
                         <div class="flex justify-between items-start mb-3">
-                            <div class="flex flex-col"><span class="text-[7px] font-black text-slate-300 uppercase tracking-widest mb-0.5" x-text="t.kategori"></span><span class="bg-slate-100 text-[8px] font-black px-2 py-0.5 rounded-full text-slate-500 w-fit" x-text="t.prioritas"></span></div>
+                            <div><span class="text-[7px] font-black text-slate-300 uppercase block tracking-widest mb-1" x-text="t.kategori"></span><span class="bg-slate-100 text-[8px] font-black px-2 py-0.5 rounded-full text-slate-500" x-text="t.prioritas"></span></div>
                             <div class="flex space-x-4">
-                                <button @click="copyTask(t)" class="text-slate-300 hover:text-sky-500 transition"><i class="fas fa-clone"></i></button>
-                                <button @click="editTask(t)" class="text-slate-300 hover:text-sky-500 transition"><i class="fas fa-edit"></i></button>
-                                <button @click="deleteTask(t)" class="text-red-200 hover:text-red-500 transition"><i class="fas fa-trash"></i></button>
+                                <button @click="copyTask(t)" class="text-slate-300 hover:text-sky-500 transition p-1"><i class="fas fa-clone"></i></button>
+                                <button @click="editTask(t)" class="text-slate-300 hover:text-sky-500 transition p-1"><i class="fas fa-edit"></i></button>
+                                <button @click="deleteTask(t)" class="text-red-200 hover:text-red-500 transition p-1"><i class="fas fa-trash"></i></button>
                             </div>
                         </div>
                         <p class="text-xs font-bold text-slate-700 mb-5 leading-relaxed" x-text="t.uraian"></p>
-                        <button @click="openCompleteModal(t)" class="w-full bg-emerald-500 text-white py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.1em] shadow-lg shadow-emerald-100 active:scale-95 transition">Tandai Selesai</button>
+                        <button @click="openCompleteModal(t)" class="w-full bg-emerald-500 text-white py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.1em] shadow-lg shadow-emerald-100 active:scale-95 transition">COMPLETE MISSION</button>
                     </div>
                 </template>
             </div>
         </div>
 
-        <!-- MODULE: TOOLS -->
+        <!-- TOOLS -->
         <div x-show="activeTab === 'tools'" x-cloak class="animate-up">
             <div x-show="!activeTool">
-                <h2 class="text-xl font-black text-slate-800 mb-6 uppercase tracking-tighter">Strategic Tools</h2>
+                <h2 class="text-xl font-black text-slate-800 mb-6 uppercase tracking-tighter">Strategic Arsenal</h2>
                 <div class="grid grid-cols-1 gap-4">
-                    <div @click="activeTool = 'vault'" class="glass-card p-5 flex items-center space-x-4 border-b-4 border-slate-800 active:bg-slate-50 active:scale-95 transition"><div class="w-14 h-14 bg-slate-900 rounded-2xl flex items-center justify-center text-sky-400 shadow-inner"><i class="fas fa-vault text-2xl"></i></div><div class="flex-1"><h4 class="text-sm font-black text-slate-800 uppercase">Strategic Vault</h4><p class="text-[9px] font-bold text-slate-400">Credential & Key Manager</p></div><i class="fas fa-chevron-right text-slate-300 text-xs"></i></div>
-                    <div @click="activeTool = 'notes'" class="glass-card p-5 flex items-center space-x-4 border-b-4 border-orange-500 active:bg-orange-50 active:scale-95 transition"><div class="w-14 h-14 bg-orange-100 rounded-2xl flex items-center justify-center text-orange-600"><i class="fas fa-note-sticky text-2xl"></i></div><div class="flex-1"><h4 class="text-sm font-black text-slate-800 uppercase">Strategic Notes</h4><p class="text-[9px] font-bold text-slate-400">Intelligence Memo & Draft</p></div><i class="fas fa-chevron-right text-slate-300 text-xs"></i></div>
-                    <div @click="activeTool = 'personil'" class="glass-card p-5 flex items-center space-x-4 border-b-4 border-blue-500 active:bg-blue-50 active:scale-95 transition"><div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600"><i class="fas fa-users-gear text-2xl"></i></div><div class="flex-1"><h4 class="text-sm font-black text-slate-800 uppercase">Personnel Database</h4><p class="text-[9px] font-bold text-slate-400">Team Identity & Info Manager</p></div><i class="fas fa-chevron-right text-slate-300 text-xs"></i></div>
+                    <div @click="activeTool = 'vault'" class="glass-card p-5 flex items-center space-x-4 border-b-4 border-slate-900 active:bg-slate-50 active:scale-95 transition"><div class="w-14 h-14 bg-slate-900 rounded-2xl flex items-center justify-center text-sky-400 shadow-inner"><i class="fas fa-vault text-2xl"></i></div><div class="flex-1"><h4 class="text-sm font-black text-slate-800 uppercase tracking-tight">Strategic Vault</h4><p class="text-[9px] font-bold text-slate-400">Authorized Key Manager</p></div><i class="fas fa-chevron-right text-slate-300 text-xs"></i></div>
+                    <div @click="activeTool = 'notes'" class="glass-card p-5 flex items-center space-x-4 border-b-4 border-orange-500 active:bg-slate-50 active:scale-95 transition"><div class="w-14 h-14 bg-orange-100 rounded-2xl flex items-center justify-center text-orange-600 shadow-inner"><i class="fas fa-note-sticky text-2xl"></i></div><div class="flex-1"><h4 class="text-sm font-black text-slate-800 uppercase tracking-tight">Intelligence Memo</h4><p class="text-[9px] font-bold text-slate-400">Classified Notes & Drafts</p></div><i class="fas fa-chevron-right text-slate-300 text-xs"></i></div>
+                    <div @click="activeTool = 'personil'" class="glass-card p-5 flex items-center space-x-4 border-b-4 border-blue-500 active:bg-slate-50 active:scale-95 transition"><div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 shadow-inner"><i class="fas fa-users-gear text-2xl"></i></div><div class="flex-1"><h4 class="text-sm font-black text-slate-800 uppercase tracking-tight">Team Personnel</h4><p class="text-[9px] font-bold text-slate-400">Agent Identity Database</p></div><i class="fas fa-chevron-right text-slate-300 text-xs"></i></div>
                 </div>
             </div>
 
-            <!-- TOOL VIEWS (ALREADY OPTIMIZED) -->
+            <!-- TOOL VIEW: VAULT -->
             <div x-show="activeTool === 'vault'" class="animate-up">
                 <button @click="activeTool = null" class="w-10 h-10 bg-white border border-slate-100 rounded-full flex items-center justify-center text-slate-400 mb-6 active:scale-90 transition"><i class="fas fa-arrow-left"></i></button>
                 <div class="space-y-4">
                     <template x-for="m in vault.master" :key="m.id">
-                        <div class="glass-card p-5 bg-slate-900 border-0"><div class="flex justify-between items-center mb-4"><h4 class="text-[11px] font-black text-white uppercase tracking-tighter" x-text="m.judul"></h4><span class="text-[7px] font-black text-sky-400 border border-sky-900 px-2 py-0.5 rounded uppercase" x-text="m.kategori"></span></div><div class="space-y-3"><template x-for="k in vault.keys.filter(k => k.master_id === m.id)" :key="k.id"><div class="bg-slate-800/50 p-4 rounded-2xl flex justify-between items-center"><div><p class="text-[8px] font-black text-slate-500 uppercase mb-1" x-text="k.label"></p><p class="text-[10px] font-mono font-bold text-sky-100" x-text="k.username"></p></div><button @click="copyToClipboard(k.password)" class="bg-sky-500/10 text-sky-400 w-10 h-10 rounded-xl flex items-center justify-center active:bg-sky-500 active:text-white transition"><i class="fas fa-copy"></i></button></div></template></div><p class="text-[8px] font-bold text-slate-600 mt-4 break-all" x-text="m.link"></p></div>
+                        <div class="glass-card p-5 bg-slate-900 border-0 shadow-2xl">
+                            <div class="flex justify-between items-center mb-4"><h4 class="text-[11px] font-black text-white uppercase tracking-tighter" x-text="m.judul"></h4><span class="text-[7px] font-black text-sky-400 border border-sky-900 px-2 py-0.5 rounded" x-text="m.kategori"></span></div>
+                            <div class="space-y-3">
+                                <template x-for="k in vault.keys.filter(k => k.master_id === m.id)" :key="k.id">
+                                    <div class="bg-slate-800/50 p-4 rounded-2xl flex justify-between items-center group">
+                                        <div><p class="text-[8px] font-black text-slate-500 uppercase mb-1" x-text="k.label"></p><p class="text-[10px] font-mono font-bold text-sky-100" x-text="k.username"></p></div>
+                                        <button @click="copyToClipboard(k.password)" class="bg-sky-500/10 text-sky-400 w-10 h-10 rounded-xl flex items-center justify-center active:bg-sky-500 active:text-white transition"><i class="fas fa-copy"></i></button>
+                                    </div>
+                                </template>
+                            </div>
+                            <p class="text-[8px] font-bold text-slate-600 mt-4 break-all opacity-50" x-text="m.link"></p>
+                        </div>
                     </template>
                 </div>
             </div>
 
+            <!-- TOOL VIEW: NOTES -->
             <div x-show="activeTool === 'notes'" class="animate-up">
-                <div class="flex items-center justify-between mb-6"><button @click="activeTool = null" class="w-10 h-10 bg-white border border-slate-100 rounded-full flex items-center justify-center text-slate-400 active:scale-90 transition"><i class="fas fa-arrow-left"></i></button><button @click="openModal('note')" class="bg-orange-500 text-white px-5 py-2.5 rounded-full font-black text-[10px] shadow-lg shadow-orange-100 uppercase tracking-widest active:scale-95 transition">+ New Note</button></div>
-                <input type="text" x-model="noteSearch" placeholder="Cari Catatan Strategis..." class="w-full bg-white border-2 border-slate-50 p-4 rounded-2xl text-xs font-bold mb-6 focus:ring-2 focus:ring-orange-500/20 outline-none">
-                <div class="space-y-4"><template x-for="n in filteredNotes" :key="n.id"><div class="glass-card p-5 relative overflow-hidden"><div class="flex justify-between items-start mb-3"><span class="bg-sky-50 text-sky-600 text-[8px] font-black px-2 py-0.5 rounded uppercase" x-text="n.kategori"></span><span class="text-[8px] font-bold text-slate-300" x-text="n.created_at"></span></div><h4 class="text-sm font-black text-slate-800 mb-3 tracking-tight" x-text="n.judul"></h4><p class="text-[11px] text-slate-500 leading-relaxed whitespace-pre-line border-l-2 border-slate-100 pl-3" x-text="n.isi"></p><div class="mt-5 flex justify-end space-x-4"><button @click="copyToClipboard(n.isi)" class="text-slate-400 text-[9px] font-black uppercase flex items-center active:text-sky-500 transition"><i class="fas fa-copy mr-1.5"></i> Copy</button><button @click="cloneNote(n)" class="text-slate-400 text-[9px] font-black uppercase flex items-center active:text-orange-500 transition"><i class="fas fa-clone mr-1.5"></i> Clone</button></div></div></template></div>
+                <div class="flex items-center justify-between mb-6"><button @click="activeTool = null" class="w-10 h-10 bg-white border border-slate-100 rounded-full flex items-center justify-center text-slate-400 active:scale-90 transition"><i class="fas fa-arrow-left"></i></button><button @click="openModal('note')" class="bg-orange-500 text-white px-5 py-2.5 rounded-full font-black text-[10px] shadow-lg shadow-orange-100 uppercase tracking-widest active:scale-95 transition">+ NEW MEMO</button></div>
+                <input type="text" x-model="noteSearch" placeholder="Search Intel..." class="w-full bg-white border-2 border-slate-50 p-4 rounded-2xl text-xs font-bold mb-6 focus:ring-2 focus:ring-orange-500/20 outline-none">
+                <div class="space-y-4"><template x-for="n in filteredNotes" :key="n.id"><div class="glass-card p-5 relative overflow-hidden"><div class="flex justify-between mb-3"><span class="bg-sky-50 text-sky-600 text-[8px] font-black px-2 py-0.5 rounded uppercase" x-text="n.kategori"></span><span class="text-[8px] font-bold text-slate-300" x-text="n.created_at"></span></div><h4 class="text-sm font-black text-slate-800 mb-3" x-text="n.judul"></h4><p class="text-[11px] text-slate-500 leading-relaxed whitespace-pre-line border-l-2 border-slate-100 pl-3" x-text="n.isi"></p><div class="mt-5 flex justify-end space-x-4"><button @click="copyToClipboard(n.isi)" class="text-slate-400 text-[9px] font-black uppercase flex items-center active:text-sky-500 transition"><i class="fas fa-copy mr-1.5"></i> Copy</button><button @click="cloneNote(n)" class="text-slate-400 text-[9px] font-black uppercase flex items-center active:text-orange-500 transition"><i class="fas fa-clone mr-1.5"></i> Clone</button></div></div></template></div>
             </div>
 
+            <!-- TOOL VIEW: PERSONIL -->
             <div x-show="activeTool === 'personil'" class="animate-up">
                 <button @click="activeTool = null" class="w-10 h-10 bg-white border border-slate-100 rounded-full flex items-center justify-center text-slate-400 mb-6 active:scale-90 transition"><i class="fas fa-arrow-left"></i></button>
-                <input type="text" x-model="personilSearch" placeholder="Cari Nama atau NIP..." class="w-full bg-white border-2 border-slate-50 p-4 rounded-2xl text-xs font-bold mb-6 focus:ring-2 focus:ring-blue-500/20 outline-none">
-                <div class="space-y-4"><template x-for="p in filteredPersonil" :key="p.id"><div class="glass-card p-6 border-b-4 border-blue-100"><div class="flex justify-between items-start mb-4"><div><h4 class="text-xs font-black text-slate-800 uppercase tracking-tight" x-text="p.nama"></h4><p class="text-[10px] font-bold text-slate-400 mt-0.5" x-text="'NIP. ' + p.nip"></p></div><span class="bg-blue-600 text-white text-[8px] font-black px-2 py-0.5 rounded" x-text="p.golongan"></span></div><div class="space-y-2.5"><div class="flex justify-between items-center"><span class="text-[8px] font-black text-slate-400 uppercase">Jabatan</span><span class="text-[9px] font-bold text-slate-600 text-right" x-text="p.nama_jabatan"></span></div><div class="flex justify-between items-center bg-slate-50 p-2 rounded-lg"><span class="text-[8px] font-black text-slate-400 uppercase">Rekening</span><span class="text-[9px] font-black text-slate-700 font-mono" x-text="p.no_rekening || '-'"></span></div><div class="flex justify-between items-center"><span class="text-[8px] font-black text-slate-400 uppercase">NPWP</span><span class="text-[9px] font-bold text-slate-700" x-text="p.npwp || '-'"></span></div></div><div class="mt-4 p-3 bg-blue-50/30 rounded-xl"><p class="text-[7px] font-black text-blue-400 uppercase mb-1">Domisili</p><p class="text-[10px] text-slate-500 leading-snug italic" x-text="p.alamat || 'No Address Data'"></p></div></div></template></div>
+                <input type="text" x-model="personilSearch" placeholder="Search Agent Identity..." class="w-full bg-white border-2 border-slate-50 p-4 rounded-2xl text-xs font-bold mb-6 focus:ring-2 focus:ring-blue-500/20 outline-none">
+                <div class="space-y-4"><template x-for="p in filteredPersonil" :key="p.id"><div class="glass-card p-6 border-b-4 border-blue-100 shadow-lg shadow-blue-50/50"><div class="flex justify-between items-start mb-4"><div><h4 class="text-xs font-black text-slate-800 uppercase tracking-tight" x-text="p.nama"></h4><p class="text-[10px] font-bold text-slate-400" x-text="'NIP. ' + p.nip"></p></div><span class="bg-blue-600 text-white text-[8px] font-black px-2 py-0.5 rounded" x-text="p.golongan"></span></div><div class="space-y-2.5 text-[10px]"><div class="flex justify-between"><span class="text-slate-400 font-bold uppercase text-[7px]">Jabatan</span><span class="text-slate-700 font-bold text-right pl-4" x-text="p.nama_jabatan"></span></div><div class="flex justify-between"><span class="text-slate-400 font-bold uppercase text-[7px]">Bank/Rek</span><span class="text-slate-700 font-bold" x-text="(p.nama_bank || '') + ' ' + (p.no_rekening || '-')"></span></div><div class="flex justify-between"><span class="text-slate-400 font-bold uppercase text-[7px]">NPWP</span><span class="text-slate-700 font-bold" x-text="p.npwp || '-'"></span></div></div><div class="mt-4 pt-4 border-t border-slate-50 text-[9px] text-slate-400 italic" x-text="p.alamat || 'Address Classified'"></div></div></template></div>
             </div>
         </div>
 
-        <!-- MODULE: BMD (With Photo Intelligence) -->
+        <!-- MODULE: BMD (INTEL AUDIT) -->
         <div x-show="activeTab === 'bmd'" x-cloak class="animate-up">
             <h2 class="text-xl font-black text-slate-800 mb-6 uppercase tracking-tighter italic">Intelligence Audit</h2>
-            <input type="text" x-model="bmdSearch" placeholder="Cari Aset, Merk, atau Kode..." class="w-full bg-white border-2 border-slate-50 p-4 rounded-2xl text-xs font-bold mb-6 focus:ring-2 focus:ring-sky-500/20 outline-none">
+            <input type="text" x-model="bmdSearch" placeholder="Search Aset, Merk, Kode..." class="w-full bg-white border-2 border-slate-50 p-4 rounded-2xl text-xs font-bold mb-6 focus:ring-2 focus:ring-sky-500/20 outline-none">
             <div class="space-y-4">
                 <template x-for="item in filteredBMD" :key="item.id">
-                    <div class="glass-card p-5 active:scale-[0.98] transition">
-                        <div class="flex justify-between mb-3">
-                            <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest" x-text="item.kode_barang"></span>
-                            <div class="flex items-center space-x-2">
-                                <template x-if="item.link_foto">
-                                    <button @click="openPhoto(item.link_foto)" class="text-sky-500 p-1 active:scale-110 transition"><i class="fas fa-image"></i></button>
-                                </template>
-                                <span :class="getKondisiColor(item.kondisi)" class="text-[7px] font-black px-2 py-0.5 rounded uppercase" x-text="item.kondisi || 'Belum Audit'"></span>
-                            </div>
-                        </div>
+                    <div class="glass-card p-5 active:scale-[0.98] transition relative overflow-hidden">
+                        <div class="flex justify-between mb-3"><span class="text-[8px] font-black text-slate-400 uppercase tracking-widest" x-text="item.kode_barang"></span><div class="flex items-center space-x-2"><template x-if="item.link_foto"><button @click="openPhoto(item.link_foto)" class="text-sky-500 active:scale-110 transition"><i class="fas fa-image"></i></button></template><span :class="getKondisiColor(item.kondisi)" class="text-[7px] font-black px-2 py-0.5 rounded uppercase" x-text="item.kondisi || 'Unchecked'"></span></div></div>
                         <p class="text-xs font-black text-slate-700 leading-tight mb-4" x-text="item.nama_barang"></p>
-                        <div class="flex justify-between items-center pt-3 border-t border-slate-50">
-                            <span class="text-[9px] font-bold text-slate-400 uppercase" x-text="item.asal_perolehan"></span>
-                            <button @click="openAuditModal(item)" class="bg-slate-900 text-white text-[8px] font-black px-4 py-2 rounded-xl uppercase tracking-widest active:scale-95 transition">Audit</button>
-                        </div>
+                        <div class="flex justify-between items-center pt-3 border-t border-slate-50"><span class="text-[9px] font-bold text-slate-400 uppercase" x-text="item.asal_perolehan"></span><button @click="openAuditModal(item)" class="bg-slate-900 text-white text-[8px] font-black px-5 py-2 rounded-xl uppercase tracking-widest active:scale-95 transition">Audit Aset</button></div>
                     </div>
                 </template>
+                <div x-show="bmd.items.length > 50 && !bmdSearch" class="text-center py-6"><p class="text-[9px] font-black text-slate-300 uppercase tracking-widest italic">Use Search for Full 460+ Assets Database</p></div>
             </div>
         </div>
 
@@ -200,23 +183,37 @@
     <!-- NAVIGATION -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-slate-100 z-50 safe-bottom">
         <div class="max-w-md mx-auto flex justify-around py-3">
-            <button @click="activeTab = 'dash'; activeTool = null" :class="activeTab === 'dash' ? 'tab-active' : 'tab-inactive'" class="flex flex-col items-center active:scale-110 transition"><i class="fas fa-th-large text-lg mb-1"></i><span class="text-[8px] font-black uppercase">Dash</span></button>
-            <button @click="activeTab = 'task'; activeTool = null" :class="activeTab === 'task' ? 'tab-active' : 'tab-inactive'" class="flex flex-col items-center active:scale-110 transition"><i class="fas fa-tasks text-lg mb-1"></i><span class="text-[8px] font-black uppercase">Misi</span></button>
-            <button @click="activeTab = 'tools'; activeTool = null" :class="activeTab === 'tools' ? 'tab-active' : 'tab-inactive'" class="flex flex-col items-center active:scale-110 transition"><i class="fas fa-toolbox text-lg mb-1"></i><span class="text-[8px] font-black uppercase">Alat</span></button>
-            <button @click="activeTab = 'bmd'; activeTool = null" :class="activeTab === 'bmd' ? 'tab-active' : 'tab-inactive'" class="flex flex-col items-center active:scale-110 transition"><i class="fas fa-box text-lg mb-1"></i><span class="text-[8px] font-black uppercase">Aset</span></button>
+            <button @click="activeTab = 'dash'; activeTool = null" :class="activeTab === 'dash' ? 'tab-active' : 'tab-inactive'" class="flex flex-col items-center active:scale-110 transition"><i class="fas fa-th-large text-lg mb-1"></i><span class="text-[8px] font-black uppercase">Home</span></button>
+            <button @click="activeTab = 'task'; activeTool = null" :class="activeTab === 'task' ? 'tab-active' : 'tab-inactive'" class="flex flex-col items-center active:scale-110 transition"><i class="fas fa-tasks text-lg mb-1"></i><span class="text-[8px] font-black uppercase">Missions</span></button>
+            <button @click="activeTab = 'tools'; activeTool = null" :class="activeTab === 'tools' ? 'tab-active' : 'tab-inactive'" class="flex flex-col items-center active:scale-110 transition"><i class="fas fa-toolbox text-lg mb-1"></i><span class="text-[8px] font-black uppercase">Arsenal</span></button>
+            <button @click="activeTab = 'bmd'; activeTool = null" :class="activeTab === 'bmd' ? 'tab-active' : 'tab-inactive'" class="flex flex-col items-center active:scale-110 transition"><i class="fas fa-box text-lg mb-1"></i><span class="text-[8px] font-black uppercase">Assets</span></button>
         </div>
     </nav>
 
-    <!-- MODALS (TASK, ABSEN, NOTE, AUDIT, COMPLETE) -->
+    <!-- SHADOW DECK (Truly Dynamic & Interactive) -->
+    <div x-show="shadowOpen" x-cloak class="fixed inset-0 z-[900] bg-black p-6 flex flex-col">
+        <div class="flex justify-between items-center mb-10"><h2 class="text-2xl font-black text-sky-500 italic uppercase tracking-tighter">Shadow Deck</h2><button @click="shadowOpen = false" class="w-12 h-12 bg-slate-900 text-white rounded-full flex items-center justify-center text-xl active:scale-90 transition">&times;</button></div>
+        <div class="flex-1 space-y-4 overflow-y-auto no-scrollbar">
+            <template x-for="s in shadowTasks.filter(st => st.status == 0)" :key="s.id">
+                <div @click="completeShadowTask(s)" class="bg-slate-900 p-6 rounded-3xl border border-slate-800 flex justify-between items-center active:bg-slate-800 transition">
+                    <div class="flex-1 pr-4"><p class="text-[8px] font-black text-sky-800 uppercase tracking-widest mb-1">Ghost Target</p><span class="text-white font-bold text-sm leading-snug" x-text="s.uraian || s.task"></span></div>
+                    <i class="fas fa-circle-check text-sky-500 text-xl"></i>
+                </div>
+            </template>
+            <div x-show="shadowTasks.filter(st => st.status == 0).length === 0" class="text-center py-20"><i class="fas fa-ghost text-4xl text-slate-800 mb-4"></i><p class="text-slate-500 font-bold uppercase text-[10px] tracking-widest">Markas Bersih, Jendral.</p></div>
+        </div>
+    </div>
+
+    <!-- MODAL ENGINE -->
     <div x-show="modal.open" x-cloak class="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm flex items-end">
         <div class="bg-white w-full rounded-t-[3rem] p-8 animate-up" @click.away="modal.open = false">
             <div class="w-12 h-1.5 bg-slate-100 rounded-full mx-auto mb-8"></div>
             <h3 class="text-xl font-black text-slate-800 mb-6 uppercase italic tracking-tighter" x-text="modal.title"></h3>
             
             <div x-show="modal.type === 'task'" class="space-y-5">
-                <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Detail Misi</label><textarea x-model="form.task.uraian" rows="3" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-medium border-0 focus:ring-2 focus:ring-sky-500/20"></textarea></div>
+                <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Mission Intel</label><textarea x-model="form.task.uraian" rows="3" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-medium border-0 focus:ring-2 focus:ring-sky-500/20 outline-none"></textarea></div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Prioritas</label><select x-model="form.task.prio" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-bold border-0"><option value="P1">P1 (Critical)</option><option value="P2">P2 (Normal)</option><option value="P3">P3 (Routine)</option><option value="Khusus">Khusus</option></select></div>
+                    <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Priority</label><select x-model="form.task.prio" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-bold border-0 uppercase"><option value="P1">P1 (Critical)</option><option value="P2">P2 (Normal)</option><option value="P3">P3 (Routine)</option><option value="Khusus">Khusus</option></select></div>
                     <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Deadline</label><input type="date" x-model="form.task.deadline" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-bold border-0"></div>
                 </div>
             </div>
@@ -224,64 +221,50 @@
             <div x-show="modal.type === 'complete'" class="space-y-5">
                 <p class="text-xs font-bold text-slate-500 mb-2 italic" x-text="form.complete.uraian"></p>
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Selesai Pada</label><input type="date" x-model="form.complete.date" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-bold border-0"></div>
-                    <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Durasi (Menit)</label><input type="number" x-model="form.complete.dur" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-bold border-0"></div>
+                    <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Completed Date</label><input type="date" x-model="form.complete.date" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-bold border-0"></div>
+                    <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Duration (Min)</label><input type="number" x-model="form.complete.dur" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-bold border-0"></div>
                 </div>
             </div>
 
             <div x-show="modal.type === 'absen'" class="space-y-5">
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Kategori</label><select x-model="form.absen.kat" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-bold border-0"><option value="TL">TL (TELAT)</option><option value="PC">PC (PULANG CEPAT)</option><option value="TK">TK (TANPA KETERANGAN)</option></select></div>
-                    <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Jam Kejadian</label><input type="time" x-model="form.absen.jam" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-bold border-0"></div>
+                    <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Category</label><select x-model="form.absen.kat" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-bold border-0"><option value="TL">TL (TELAT)</option><option value="PC">PC (PULANG CEPAT)</option><option value="TK">TK (ALPA)</option></select></div>
+                    <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Time Log</label><input type="time" x-model="form.absen.jam" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-bold border-0"></div>
                 </div>
-                <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Alasan</label><textarea x-model="form.absen.alasan" rows="2" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-medium border-0"></textarea></div>
-                <div class="flex items-center space-x-3 p-4 bg-amber-50 rounded-2xl border border-amber-100">
-                    <input type="checkbox" x-model="form.absen.checked" class="w-5 h-5 rounded-lg accent-amber-500">
-                    <label class="text-[10px] font-black text-amber-700 uppercase leading-none">Konfirmasi Kejadian</label>
+                <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Justification</label><textarea x-model="form.absen.alasan" rows="2" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-medium border-0" placeholder="State your reason, Jendral..."></textarea></div>
+                <div @click="form.absen.checked = !form.absen.checked" class="flex items-center space-x-3 p-4 rounded-2xl border transition" :class="form.absen.checked ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-slate-50 border-slate-100 text-slate-400'">
+                    <i class="fas" :class="form.absen.checked ? 'fa-check-square' : 'fa-square'"></i>
+                    <label class="text-[10px] font-black uppercase">Mandatory Confirmation Checklist</label>
                 </div>
             </div>
 
             <div x-show="modal.type === 'note'" class="space-y-4">
-                <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Judul Memo</label><input type="text" x-model="form.note.judul" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-bold border-0"></div>
-                <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Kategori</label><input type="text" x-model="form.note.kat" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-bold border-0"></div>
-                <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Isi</label><textarea x-model="form.note.isi" rows="4" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-medium border-0"></textarea></div>
+                <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Title</label><input type="text" x-model="form.note.judul" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-bold border-0 outline-none"></div>
+                <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Category</label><input type="text" x-model="form.note.kat" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-bold border-0 outline-none"></div>
+                <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Content</label><textarea x-model="form.note.isi" rows="4" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-medium border-0 outline-none"></textarea></div>
             </div>
 
             <div x-show="modal.type === 'audit'" class="space-y-4">
-                <p class="text-xs font-black text-slate-500 italic" x-text="form.audit.nama"></p>
-                <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Kondisi Barang</label><select x-model="form.audit.kondisi" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-bold border-0"><option value="BAIK">BAIK</option><option value="KURANG BAIK">KURANG BAIK</option><option value="RUSAK BERAT">RUSAK BERAT</option></select></div>
-                <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Catatan Audit</label><textarea x-model="form.audit.catatan" rows="3" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-medium border-0"></textarea></div>
+                <p class="text-xs font-black text-slate-800 mb-2 italic" x-text="form.audit.nama"></p>
+                <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Physical Condition</label><select x-model="form.audit.kondisi" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-bold border-0"><option value="BAIK">BAIK</option><option value="KURANG BAIK">KURANG BAIK</option><option value="RUSAK BERAT">RUSAK BERAT</option></select></div>
+                <div><label class="text-[10px] font-black text-slate-400 uppercase mb-2 block ml-1">Audit Log</label><textarea x-model="form.audit.catatan" rows="3" class="w-full bg-slate-50 rounded-2xl p-4 text-sm font-medium border-0" placeholder="Type field inspection results..."></textarea></div>
             </div>
 
-            <button @click="sendToGate()" :disabled="submitting || (modal.type === 'absen' && !form.absen.checked)" class="w-full bg-sky-600 text-white p-5 rounded-[1.5rem] font-black text-sm mt-10 shadow-xl shadow-sky-100 uppercase tracking-widest active:scale-95 transition disabled:opacity-50">
-                <span x-show="!submitting" x-text="editMode ? 'Update Data' : 'Konfirmasi Eksekusi'"></span>
-                <span x-show="submitting"><i class="fas fa-circle-notch animate-spin"></i> MEMARKIR DATA...</span>
+            <button @click="sendToGate()" :disabled="submitting || (modal.type === 'absen' && !form.absen.checked)" class="w-full bg-sky-600 text-white p-5 rounded-[1.5rem] font-black text-sm mt-10 shadow-xl shadow-sky-100 uppercase tracking-widest active:scale-95 transition disabled:opacity-30">
+                <span x-show="!submitting" x-text="editMode ? 'UPDATE DATA' : 'CONFIRM EXECUTION'"></span>
+                <span x-show="submitting"><i class="fas fa-circle-notch animate-spin"></i> PARKING DATA...</span>
             </button>
-        </div>
-    </div>
-
-    <!-- SHADOW DECK -->
-    <div x-show="shadowOpen" x-cloak class="fixed inset-0 z-[900] bg-black p-6 flex flex-col">
-        <div class="flex justify-between items-center mb-10"><h2 class="text-2xl font-black text-sky-500 italic uppercase tracking-tighter">Shadow Deck</h2><button @click="shadowOpen = false" class="w-12 h-12 bg-slate-900 text-white rounded-full flex items-center justify-center text-xl">&times;</button></div>
-        <div class="flex-1 space-y-4 overflow-y-auto no-scrollbar">
-            <template x-for="s in shadowTasks" :key="s.id">
-                <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800 flex justify-between items-center active:bg-slate-800 transition">
-                    <div class="flex-1 pr-4"><p class="text-[8px] font-black text-sky-800 uppercase tracking-widest mb-1">Ghost Task</p><span class="text-white font-bold text-sm leading-snug" x-text="s.uraian"></span></div>
-                    <i class="fas fa-circle-check text-sky-500 text-xl"></i>
-                </div>
-            </template>
         </div>
     </div>
 
     <script>
         function mobileApp() {
             return {
-                activeTab: 'dash', activeTool: null, loading: false, submitting: false, online: navigator.onLine, version: 'V5-ULTIMATE', syncTime: 'Syncing...',
+                activeTab: 'dash', activeTool: null, loading: false, submitting: false, online: navigator.onLine, version: 'V5-AZURE COMBAT', syncTime: 'Syncing...',
                 stats: { completed: 0, tpp: '100%', potongan_rp: 'Rp 0' }, tasks: { pending: [], completed: [] }, guardian: { logs: [] }, bmd: { items: [] }, 
                 notes: [], personil: [], vault: { master: [], keys: [] }, shadowTasks: [],
                 modal: { open: false, type: '', title: '' }, editMode: false, editId: null, shadowOpen: false, versionClicks: 0, 
-                bmdSearch: '', personilSearch: '', noteSearch: '',
-                blinkAlert: false, blinkMessage: '',
+                bmdSearch: '', personilSearch: '', noteSearch: '', blinkAlert: false, blinkMessage: '',
                 form: { 
                     task: { uraian: '', prio: 'P2', deadline: new Date().toISOString().split('T')[0] },
                     complete: { id: null, uraian: '', date: new Date().toISOString().split('T')[0], dur: 60 },
@@ -315,46 +298,35 @@
                 get missionProgress() { const total = this.tasks.pending.length + parseInt(this.stats.completed); return total === 0 ? 0 : Math.round((parseInt(this.stats.completed) / total) * 100); },
                 getPriorityColor(p) { return { 'P1': 'border-red-500', 'P2': 'border-amber-400', 'P3': 'border-emerald-500', 'Khusus': 'border-purple-500' }[p] || 'border-slate-300'; },
                 getKondisiColor(k) { return { 'BAIK': 'bg-emerald-100 text-emerald-600', 'KURANG BAIK': 'bg-amber-100 text-amber-600', 'RUSAK BERAT': 'bg-red-100 text-red-600' }[k] || 'bg-slate-100 text-slate-500'; },
-
-                checkBlinkAlert() {
-                    const now = new Date();
-                    const hm = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-                    if(hm === '07:25') { this.blinkAlert = true; this.blinkMessage = 'SIAPKAN ABSENSI MASUK! (BATAS 07:30)'; if(navigator.vibrate) navigator.vibrate([200, 100, 200]); }
-                    if(hm === '15:55') { this.blinkAlert = true; this.blinkMessage = 'SIAPKAN ABSENSI PULANG! (BATAS 16:00)'; if(navigator.vibrate) navigator.vibrate([200, 100, 200]); }
-                },
-
-                openModal(type) { 
-                    this.editMode = false; this.modal.type = type; 
-                    this.modal.title = { 'task': 'Misi Baru', 'note': 'Quick Memo', 'absen': 'Lapor Absensi' }[type]; 
-                    this.modal.open = true; 
-                },
-
-                copyTask(t) { this.editMode = false; this.form.task = { uraian: t.uraian, prio: t.prioritas, deadline: t.deadline }; this.modal.type = 'task'; this.modal.title = 'Clone Misi'; this.modal.open = true; },
-                editTask(t) { this.editMode = true; this.editId = t.id; this.form.task = { uraian: t.uraian, prio: t.prioritas, deadline: t.deadline }; this.modal.type = 'task'; this.modal.title = 'Edit Misi'; this.modal.open = true; },
-                openCompleteModal(t) { this.editMode = false; this.form.complete.id = t.id; this.form.complete.uraian = t.uraian; this.modal.type = 'complete'; this.modal.title = 'Selesaikan Misi'; this.modal.open = true; },
-                openAuditModal(item) { this.editMode = false; this.form.audit = { id: item.id, nama: item.nama_barang, kondisi: item.kondisi || 'BAIK', catatan: item.catatan_audit || '' }; this.modal.type = 'audit'; this.modal.title = 'Audit Lapangan'; this.modal.open = true; },
-                cloneNote(n) { this.editMode = false; this.form.note = { judul: n.judul + ' (Copy)', kat: n.kategori, isi: n.isi }; this.modal.type = 'note'; this.modal.title = 'Clone Note'; this.modal.open = true; },
-                deleteTask(t) { if(confirm('Hapus Misi, Jendral?')) this.sendAction('delete_task', { id: t.id }); },
+                checkBlinkAlert() { const now = new Date(); const hm = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0'); if(hm === '07:25' || hm === '15:55') { this.blinkAlert = true; this.blinkMessage = hm === '07:25' ? 'ABSEN MASUK!' : 'ABSEN PULANG!'; if(navigator.vibrate) navigator.vibrate([300, 100, 300]); } },
+                openModal(type) { this.editMode = false; this.modal.type = type; this.modal.title = { 'task': 'Misi Baru', 'note': 'Intelligence Memo', 'absen': 'Report Attendance' }[type]; this.modal.open = true; },
+                copyTask(t) { this.editMode = false; this.form.task = { uraian: t.uraian, prio: t.prioritas, deadline: t.deadline }; this.modal.type = 'task'; this.modal.title = 'Clone Mission'; this.modal.open = true; },
+                editTask(t) { this.editMode = true; this.editId = t.id; this.form.task = { uraian: t.uraian, prio: t.prioritas, deadline: t.deadline }; this.modal.type = 'task'; this.modal.title = 'Update Mission'; this.modal.open = true; },
+                openCompleteModal(t) { this.editMode = false; this.form.complete.id = t.id; this.form.complete.uraian = t.uraian; this.modal.type = 'complete'; this.modal.title = 'Task Finalization'; this.modal.open = true; },
+                openAuditModal(item) { this.editMode = false; this.form.audit = { id: item.id, nama: item.nama_barang, kondisi: item.kondisi || 'BAIK', catatan: item.catatan_audit || '' }; this.modal.type = 'audit'; this.modal.title = 'Field Inspection'; this.modal.open = true; },
+                cloneNote(n) { this.editMode = false; this.form.note = { judul: n.judul + ' (Copy)', kat: n.kategori, isi: n.isi }; this.modal.type = 'note'; this.modal.title = 'Clone Memo'; this.modal.open = true; },
+                deleteTask(t) { if(confirm('Erase Mission Intelligence?')) this.sendAction('delete_task', { id: t.id }); },
+                completeShadowTask(s) { if(confirm('Mark Target Neutralized?')) this.sendAction('complete_shadow_task', { id: s.id }); },
                 openPhoto(link) { window.open(link, '_blank'); },
+                copyToClipboard(text) { const el = document.createElement('textarea'); el.value = text; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); alert('Intel Copied!'); },
 
                 handleVersionClick() {
                     this.versionClicks++;
                     if(this.versionClicks >= 3) {
-                        const pass = prompt('ACCESS CODE:');
-                        if(pass === 'tommy77') { this.shadowOpen = true; } else if(pass !== null) { alert('DENIED'); }
+                        const pass = prompt('DECK ACCESS CODE:');
+                        if(pass === 'tommy77') { this.shadowOpen = true; } else if(pass !== null) { alert('ACCESS DENIED'); }
                         this.versionClicks = 0;
                     }
                     setTimeout(() => this.versionClicks = 0, 3000);
                 },
 
-                get filteredBMD() { if (!this.bmdSearch) return this.bmd.items.slice(0, 30); const q = this.bmdSearch.toLowerCase(); return this.bmd.items.filter(i => (i.nama_barang || '').toLowerCase().includes(q) || (i.kode_barang || '').toLowerCase().includes(q) || (i.merk || '').toLowerCase().includes(q)).slice(0, 100); },
+                get filteredBMD() { 
+                    if (!this.bmdSearch) return this.bmd.items.slice(0, 50); 
+                    const q = this.bmdSearch.toLowerCase(); 
+                    return this.bmd.items.filter(i => (i.nama_barang || '').toLowerCase().includes(q) || (i.kode_barang || '').toLowerCase().includes(q) || (i.merk || '').toLowerCase().includes(q)).slice(0, 100); 
+                },
                 get filteredPersonil() { if (!this.personilSearch) return this.personil.slice(0, 20); const q = this.personilSearch.toLowerCase(); return this.personil.filter(p => (p.nama || '').toLowerCase().includes(q) || (p.nip || '').includes(q)).slice(0, 20); },
                 get filteredNotes() { if (!this.noteSearch) return this.notes.filter(n => (n.kategori || '').toLowerCase() !== 'vault'); const q = this.noteSearch.toLowerCase(); return this.notes.filter(n => (n.judul || '').toLowerCase().includes(q) || (n.isi || '').toLowerCase().includes(q)).slice(0, 50); },
-
-                copyToClipboard(text) { 
-                    const el = document.createElement('textarea'); el.value = text; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
-                    alert('Tersalin!'); 
-                },
 
                 async sendToGate() { 
                     let action = this.editMode ? 'edit_task' : ('add_' + this.modal.type); 
@@ -364,7 +336,6 @@
                     else if(this.modal.type === 'note') payload = this.form.note;
                     else if(this.modal.type === 'absen') payload = this.form.absen;
                     else if(this.modal.type === 'audit') { action = 'audit_bmd'; payload = this.form.audit; }
-
                     await this.sendAction(action, payload); 
                 },
 
@@ -376,8 +347,8 @@
                         let sha = null; let currentData = []; if (check.ok) { const meta = await check.json(); sha = meta.sha; currentData = JSON.parse(decodeURIComponent(escape(atob(meta.content)))); }
                         currentData.push({ action, timestamp: new Date().toISOString(), data });
                         const res = await fetch(url, { method: 'PUT', headers: { 'Authorization': 'token ' + TOKEN, 'Content-Type': 'application/json' }, body: JSON.stringify({ message: 'Mobile Action: ' + action, content: btoa(unescape(encodeURIComponent(JSON.stringify(currentData, null, 2)))), sha: sha }) });
-                        if (res.ok) { alert('TERPARKIR! Sinkronisasi ke PC diaktifkan.'); this.modal.open = false; }
-                    } catch (e) { alert('ERROR: Gagal Menghubungi Cloud'); } finally { this.submitting = false; }
+                        if (res.ok) { alert('DATA PARKED: Markas will process upon sync!'); this.modal.open = false; }
+                    } catch (e) { alert('ERROR: Connection Interrupted'); } finally { this.submitting = false; }
                 }
             }
         }
